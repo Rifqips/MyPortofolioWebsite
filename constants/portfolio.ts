@@ -13,15 +13,19 @@ export const skills: Skill[] = [
 
 export const projects: Project[] = [
   {
+    slug: "sangu",
     title: "Sangu",
     description:
       "Personal finance application built using Kotlin and Jetpack Compose.",
     techStack: ["Kotlin", "Compose", "MVVM"],
+    imageUrl: "/projects/placeholder.png",
   },
   {
+    slug: "work-order-management",
     title: "Work Order Management",
     description:
       "Android-based work order management application with filtering and pagination.",
     techStack: ["Android", "Room", "Retrofit"],
+    imageUrl: "/projects/placeholder2.png",
   },
 ];
