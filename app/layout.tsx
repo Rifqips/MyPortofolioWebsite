@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Rifqi Padi | Android Developer",
+  title: "Rifqi Padi Siliwangi | Software Engineer",
   description:
     "Portfolio website of Rifqi Padi, an Android Developer focused on Kotlin, Jetpack Compose, and scalable mobile architecture.",
   keywords: [
