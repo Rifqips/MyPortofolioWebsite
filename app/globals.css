@@ -33,6 +33,7 @@ body {
   inset: 0;
   z-index: -1;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .background-glow::before {
@@ -55,4 +56,16 @@ body {
   filter: blur(120px);
   bottom: -100px;
   right: -100px;
+}
+
+.background-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+
+  background-size: 50px 50px;
+}
+
+.section-anchor {
+  scroll-margin-top: 100px;
 }

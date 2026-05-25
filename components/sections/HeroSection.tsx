@@ -2,7 +2,7 @@ import FadeIn from "../animations/FadeIn";
 
 export default function HeroSection() {
   return (
-    <section className="section-spacing flex min-h-screen items-center">
+    <section className="section-anchor section-spacing flex min-h-screen items-center">
       <div className="container-layout">
         <FadeIn>
           <div className="max-w-3xl">

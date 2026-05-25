@@ -18,6 +18,7 @@ export default function ProjectCard({ project }: Props) {
         duration-300
         hover:-translate-y-1
         hover:border-sky-500
+        hover:shadow-[0_0_40px_rgba(56,189,248,0.08)]
       "
     >
       <h3

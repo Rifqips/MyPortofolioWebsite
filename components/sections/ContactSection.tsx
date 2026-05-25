@@ -4,7 +4,7 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      className="section-spacing border-t border-slate-800"
+      className="section-anchor section-spacing border-t border-slate-800"
     >
       <div className="container-layout text-center">
         <SectionHeading

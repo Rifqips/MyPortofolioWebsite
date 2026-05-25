@@ -7,7 +7,7 @@ export default function ProjectsSection() {
   return (
     <section
       id="projects"
-      className="section-spacing border-t border-slate-800"
+      className="section-anchor section-spacing border-t border-slate-800"
     >
       <div className="container-layout">
         <SectionHeading title="Featured Projects" subtitle="Portfolio" />

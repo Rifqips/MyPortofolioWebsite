@@ -4,7 +4,7 @@ import FadeIn from "../animations/FadeIn";
 
 export default function SkillsSection() {
   return (
-    <section id="skills" className="section-spacing border-t border-slate-800">
+    <section id="skills" className="section-anchor section-spacing border-t border-slate-800">
       <div className="container-layout">
         <SectionHeading title="Skills & Technologies" subtitle="Tech Stack" />
 

@@ -8,7 +8,7 @@ import SkillsSection from "@/components/sections/SkillsSection";
 
 export default function Home() {
   return (
-    <main>
+    <main className="background-grid pt-16">
       <div className="background-glow" />
 
       <Navbar />
