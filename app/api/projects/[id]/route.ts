@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import dbConnect from "@/lib/mongodb";
+import { connectMongoDB } from "@/lib/mongodb";
 import Project from "@/models/Project";
 
 interface Props {
@@ -10,42 +10,93 @@ interface Props {
 }
 
 export async function GET(_request: Request, { params }: Props) {
-  await dbConnect();
+  try {
+    await connectMongoDB();
 
-  const { id } = await params;
-  const project = await Project.findById(id);
+    const { id } = await params;
 
-  if (!project) {
+    const project = await Project.findById(id);
+
+    if (!project) {
+      return NextResponse.json(
+        { message: "Project not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(project);
+  } catch (error) {
+    console.error("GET_PROJECT_BY_ID_ERROR:", error);
+
     return NextResponse.json(
-      { message: "Project not found" },
-      { status: 404 }
+      { message: "Failed to get project" },
+      { status: 500 }
     );
   }
-
-  return NextResponse.json(project);
 }
 
 export async function PUT(request: Request, { params }: Props) {
-  await dbConnect();
+  try {
+    await connectMongoDB();
 
-  const { id } = await params;
-  const body = await request.json();
+    const { id } = await params;
+    const body = await request.json();
 
-  const project = await Project.findByIdAndUpdate(id, body, {
-    new: true,
-  });
+    const project = await Project.findByIdAndUpdate(
+      id,
+      {
+        ...body,
+        techStack: body.techStack || [],
+        features: body.features || [],
+        sections: body.sections || [],
+      },
+      {
+        new: true,
+      }
+    );
 
-  return NextResponse.json(project);
+    if (!project) {
+      return NextResponse.json(
+        { message: "Project not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(project);
+  } catch (error) {
+    console.error("PUT_PROJECT_BY_ID_ERROR:", error);
+
+    return NextResponse.json(
+      { message: "Failed to update project" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function DELETE(_request: Request, { params }: Props) {
-  await dbConnect();
+  try {
+    await connectMongoDB();
 
-  const { id } = await params;
+    const { id } = await params;
 
-  await Project.findByIdAndDelete(id);
+    const deletedProject = await Project.findByIdAndDelete(id);
 
-  return NextResponse.json({
-    message: "Project deleted successfully",
-  });
+    if (!deletedProject) {
+      return NextResponse.json(
+        { message: "Project not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      message: "Project deleted successfully",
+    });
+  } catch (error) {
+    console.error("DELETE_PROJECT_BY_ID_ERROR:", error);
+
+    return NextResponse.json(
+      { message: "Failed to delete project" },
+      { status: 500 }
+    );
+  }
 }

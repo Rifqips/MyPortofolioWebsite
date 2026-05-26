@@ -1,5 +1,19 @@
 import mongoose, { Schema } from "mongoose";
 
+const ProjectSectionSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    items: {
+      type: [String],
+      default: [],
+    },
+  },
+  { _id: false }
+);
+
 const ProjectSchema = new Schema(
   {
     title: {
@@ -11,6 +25,13 @@ const ProjectSchema = new Schema(
       type: String,
       required: true,
       unique: true,
+    },
+
+    category: {
+      type: String,
+      required: true,
+      enum: ["web", "android", "ios", "mobile", "backend", "fullstack", "design", "other"],
+      default: "web",
     },
 
     description: {
@@ -38,6 +59,11 @@ const ProjectSchema = new Schema(
       default: [],
     },
 
+    sections: {
+      type: [ProjectSectionSchema],
+      default: [],
+    },
+
     githubUrl: {
       type: String,
     },
@@ -52,10 +78,6 @@ const ProjectSchema = new Schema(
 );
 
 const Project =
-  mongoose.models.Project ||
-  mongoose.model(
-    "Project",
-    ProjectSchema
-  );
+  mongoose.models.Project || mongoose.model("Project", ProjectSchema);
 
 export default Project;

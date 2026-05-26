@@ -36,27 +36,38 @@ export async function POST(req: Request) {
     const {
       title,
       slug,
+      category,
       description,
       longDescription,
       imageUrl,
       techStack,
       features,
+      sections,
       githubUrl,
       demoUrl,
     } = await req.json();
 
-    if (!title || !slug || !description || !longDescription || !imageUrl) {
+    if (
+      !title ||
+      !slug ||
+      !category ||
+      !description ||
+      !longDescription ||
+      !imageUrl
+    ) {
       return NextResponse.json({ message: "Invalid input" }, { status: 400 });
     }
 
     const newProject = await Project.create({
       title,
       slug,
+      category,
       description,
       longDescription,
       imageUrl,
       techStack: techStack || [],
       features: features || [],
+      sections: sections || [],
       githubUrl,
       demoUrl,
     });
@@ -80,16 +91,26 @@ export async function PUT(req: Request) {
       id,
       title,
       slug,
+      category,
       description,
       longDescription,
       imageUrl,
       techStack,
       features,
+      sections,
       githubUrl,
       demoUrl,
     } = await req.json();
 
-    if (!id || !title || !slug || !description || !longDescription || !imageUrl) {
+    if (
+      !id ||
+      !title ||
+      !slug ||
+      !category ||
+      !description ||
+      !longDescription ||
+      !imageUrl
+    ) {
       return NextResponse.json({ message: "Invalid input" }, { status: 400 });
     }
 
@@ -98,11 +119,13 @@ export async function PUT(req: Request) {
       {
         title,
         slug,
+        category,
         description,
         longDescription,
         imageUrl,
         techStack: techStack || [],
         features: features || [],
+        sections: sections || [],
         githubUrl,
         demoUrl,
       },

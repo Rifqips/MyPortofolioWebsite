@@ -37,7 +37,11 @@ export default function ProjectCard({ project }: Props) {
         />
       </div>
 
-      <div className="p-8">
+      <div className="flex flex-1 flex-col p-8">
+        <span className="mb-4 inline-flex w-fit rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-xs font-medium capitalize text-sky-300">
+          {project.category}
+        </span>
+
         <h3 className="mb-4 text-2xl font-semibold transition duration-300 group-hover:text-sky-400">
           {project.title}
         </h3>
@@ -46,7 +50,7 @@ export default function ProjectCard({ project }: Props) {
           {project.description}
         </p>
 
-        <div className="flex flex-wrap gap-3">
+        <div className="mt-auto flex flex-wrap gap-3">
           {project.techStack.map((tech) => (
             <span
               key={tech}

@@ -2,7 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { projects } from "@/constants/portfolio";
+import Project from "@/models/Project";
+import { connectMongoDB } from "@/lib/mongodb";
+import { Project as ProjectType } from "@/types/portfolio";
 
 interface Props {
   params: Promise<{
@@ -10,16 +12,14 @@ interface Props {
   }>;
 }
 
-export function generateStaticParams() {
-  return projects.map((project) => ({
-    slug: project.slug,
-  }));
-}
+export const dynamic = "force-dynamic";
 
 export default async function ProjectDetailPage({ params }: Props) {
+  await connectMongoDB();
+
   const { slug } = await params;
 
-  const project = projects.find((item) => item.slug === slug);
+  const project = await Project.findOne({ slug }).lean<ProjectType>();
 
   if (!project) {
     notFound();
@@ -38,9 +38,13 @@ export default async function ProjectDetailPage({ params }: Props) {
         </Link>
 
         <div className="mb-10">
-          <p className="mb-4 font-mono text-sm text-sky-400">
-            Project Detail
-          </p>
+          <div className="mb-4 flex flex-wrap items-center gap-3">
+            <p className="font-mono text-sm text-sky-400">Project Detail</p>
+
+            <span className="inline-flex rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-xs font-medium capitalize text-sky-300">
+              {project.category}
+            </span>
+          </div>
 
           <h1 className="mb-6 text-4xl font-bold md:text-6xl">
             {project.title}
@@ -62,22 +66,55 @@ export default async function ProjectDetailPage({ params }: Props) {
         </div>
 
         <div className="grid gap-10 lg:grid-cols-[1.5fr_1fr]">
-          <div>
-            <h2 className="mb-5 text-2xl font-semibold">Features</h2>
+          <div className="space-y-10">
+            <div>
+              <h2 className="mb-5 text-2xl font-semibold">Features</h2>
 
-            <ul className="space-y-4">
-              {project.features.map((feature) => (
-                <li
-                  key={feature}
-                  className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 text-slate-300"
-                >
-                  {feature}
-                </li>
-              ))}
-            </ul>
+              <ul className="space-y-4">
+                {project.features.map((feature) => (
+                  <li
+                    key={feature}
+                    className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 text-slate-300"
+                  >
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {project.sections?.length > 0 && (
+              <div>
+                <h2 className="mb-5 text-2xl font-semibold">Project Details</h2>
+
+                <div className="space-y-5">
+                  {project.sections.map((section) => (
+                    <div
+                      key={section.title}
+                      className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5"
+                    >
+                      <h3 className="mb-4 text-lg font-semibold text-white">
+                        {section.title}
+                      </h3>
+
+                      <ul className="space-y-3">
+                        {section.items.map((item) => (
+                          <li
+                            key={item}
+                            className="flex gap-3 text-sm leading-relaxed text-slate-400"
+                          >
+                            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sky-400" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
-          <aside className="rounded-3xl border border-slate-800 bg-slate-900/40 p-6">
+          <aside className="h-fit rounded-3xl border border-slate-800 bg-slate-900/40 p-6">
             <h2 className="mb-5 text-xl font-semibold">Tech Stack</h2>
 
             <div className="mb-8 flex flex-wrap gap-3">
