@@ -33,8 +33,6 @@ const ProjectSchema = new Schema(
       enum: [
         "web",
         "android",
-        "ios",
-        "mobile",
         "backend",
         "fullstack",
         "design",

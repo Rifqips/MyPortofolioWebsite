@@ -13,16 +13,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 
-const categories = [
-  "all",
-  "web",
-  "android",
-  "ios",
-  "mobile",
-  "backend",
-  "fullstack",
-  "design",
-];
+const categories = ["all", "web", "android", "backend", "fullstack", "design"];
 
 export default function ProjectsSection() {
   const [projects, setProjects] = useState<Project[]>([]);

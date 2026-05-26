@@ -5,8 +5,6 @@ export interface Skill {
 export type ProjectCategory =
   | "web"
   | "android"
-  | "ios"
-  | "mobile"
   | "backend"
   | "fullstack"
   | "design"

@@ -161,8 +161,6 @@ export default function ProjectForm({ initialData }: Props) {
           >
             <option value="web">Web</option>
             <option value="android">Android</option>
-            <option value="ios">iOS</option>
-            <option value="mobile">Mobile</option>
             <option value="backend">Backend</option>
             <option value="fullstack">Fullstack</option>
             <option value="design">Design</option>
