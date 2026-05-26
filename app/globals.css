@@ -105,3 +105,23 @@ body {
 .project-swiper .swiper-wrapper {
   align-items: stretch;
 }
+
+.input-admin {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid rgb(30 41 59);
+  background: rgba(15, 23, 42, 0.7);
+  padding: 1rem 1.1rem;
+  color: white;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.input-admin::placeholder {
+  color: rgb(148 163 184);
+}
+
+.input-admin:focus {
+  border-color: rgb(14 165 233);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+}

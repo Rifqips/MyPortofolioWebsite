@@ -42,7 +42,7 @@ export default function ProjectForm({ initialData }: Props) {
       value
         .split(",")
         .map((item) => item.trim())
-        .filter(Boolean)
+        .filter(Boolean),
     );
   };
 
@@ -69,14 +69,12 @@ export default function ProjectForm({ initialData }: Props) {
   const removeSection = (index: number) => {
     handleChange(
       "sections",
-      form.sections.filter((_, i) => i !== index)
+      form.sections.filter((_, i) => i !== index),
     );
   };
 
   const handleSubmit = async () => {
-    const url = isEdit
-      ? `/api/projects/${initialData?._id}`
-      : "/api/projects";
+    const url = isEdit ? `/api/projects/${initialData?._id}` : "/api/projects";
 
     const method = isEdit ? "PUT" : "POST";
 
@@ -94,37 +92,53 @@ export default function ProjectForm({ initialData }: Props) {
 
   return (
     <div className="rounded-3xl border border-slate-800 bg-slate-900/50 p-6">
-      <div className="space-y-4">
-        <input
-          value={form.title}
-          onChange={(e) => handleChange("title", e.target.value)}
-          placeholder="Title"
-          className="input-admin"
-        />
+      <div className="grid gap-5">
+        <div className="grid gap-4 md:grid-cols-3">
+          <input
+            value={form.title}
+            onChange={(e) => {
+              const title = e.target.value;
+              handleChange("title", title);
 
-        <input
-          value={form.slug}
-          onChange={(e) => handleChange("slug", e.target.value)}
-          placeholder="Slug"
-          className="input-admin"
-        />
+              if (!isEdit) {
+                handleChange(
+                  "slug",
+                  title
+                    .toLowerCase()
+                    .trim()
+                    .replace(/[^a-z0-9]+/g, "-")
+                    .replace(/^-+|-+$/g, ""),
+                );
+              }
+            }}
+            placeholder="Title"
+            className="input-admin"
+          />
 
-        <select
-          value={form.category}
-          onChange={(e) =>
-            handleChange("category", e.target.value as ProjectCategory)
-          }
-          className="input-admin"
-        >
-          <option value="web">Web</option>
-          <option value="android">Android</option>
-          <option value="ios">iOS</option>
-          <option value="mobile">Mobile</option>
-          <option value="backend">Backend</option>
-          <option value="fullstack">Fullstack</option>
-          <option value="design">Design</option>
-          <option value="other">Other</option>
-        </select>
+          <input
+            value={form.slug}
+            onChange={(e) => handleChange("slug", e.target.value)}
+            placeholder="Slug"
+            className="input-admin"
+          />
+
+          <select
+            value={form.category}
+            onChange={(e) =>
+              handleChange("category", e.target.value as ProjectCategory)
+            }
+            className="input-admin"
+          >
+            <option value="web">Web</option>
+            <option value="android">Android</option>
+            <option value="ios">iOS</option>
+            <option value="mobile">Mobile</option>
+            <option value="backend">Backend</option>
+            <option value="fullstack">Fullstack</option>
+            <option value="design">Design</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
 
         <textarea
           value={form.description}
@@ -145,33 +159,35 @@ export default function ProjectForm({ initialData }: Props) {
           onChange={(url) => handleChange("imageUrl", url)}
         />
 
-        <input
-          value={form.techStack.join(", ")}
-          onChange={(e) => handleCommaChange("techStack", e.target.value)}
-          placeholder="Tech Stack: Next.js, MongoDB, TailwindCSS"
-          className="input-admin"
-        />
+        <div className="grid gap-4 md:grid-cols-2">
+          <input
+            value={form.techStack.join(", ")}
+            onChange={(e) => handleCommaChange("techStack", e.target.value)}
+            placeholder="Tech Stack: Next.js, MongoDB, TailwindCSS"
+            className="input-admin"
+          />
 
-        <input
-          value={form.features.join(", ")}
-          onChange={(e) => handleCommaChange("features", e.target.value)}
-          placeholder="Features: Login, Dashboard, CRUD"
-          className="input-admin"
-        />
+          <input
+            value={form.features.join(", ")}
+            onChange={(e) => handleCommaChange("features", e.target.value)}
+            placeholder="Features: Login, Dashboard, CRUD"
+            className="input-admin"
+          />
 
-        <input
-          value={form.githubUrl || ""}
-          onChange={(e) => handleChange("githubUrl", e.target.value)}
-          placeholder="GitHub URL"
-          className="input-admin"
-        />
+          <input
+            value={form.githubUrl || ""}
+            onChange={(e) => handleChange("githubUrl", e.target.value)}
+            placeholder="GitHub URL"
+            className="input-admin"
+          />
 
-        <input
-          value={form.demoUrl || ""}
-          onChange={(e) => handleChange("demoUrl", e.target.value)}
-          placeholder="Demo URL"
-          className="input-admin"
-        />
+          <input
+            value={form.demoUrl || ""}
+            onChange={(e) => handleChange("demoUrl", e.target.value)}
+            placeholder="Demo URL"
+            className="input-admin"
+          />
+        </div>
 
         <div className="space-y-4 rounded-2xl border border-slate-800 p-4">
           <div className="flex items-center justify-between">
