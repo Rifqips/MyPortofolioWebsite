@@ -9,22 +9,35 @@ export async function GET(req: Request) {
 
     const { searchParams } = new URL(req.url);
 
+    const category = searchParams.get("category");
+    const featured = searchParams.get("featured");
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "6");
 
-    const projects = await Project.find({})
+    const filter: Record<string, unknown> = {
+      isPublished: true,
+    };
+
+    if (featured === "true") {
+      filter.isFeatured = true;
+    }
+
+    if (category && category !== "all") {
+      filter.category = category;
+    }
+
+    const projects = await Project.find(filter)
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
       .lean();
-
     return NextResponse.json(projects);
   } catch (error) {
     console.error("GET_PROJECTS_ERROR:", error);
 
     return NextResponse.json(
       { message: "Failed to get projects" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -43,6 +56,8 @@ export async function POST(req: Request) {
       techStack,
       features,
       sections,
+      isPublished,
+      isFeatured,
       githubUrl,
       demoUrl,
     } = await req.json();
@@ -68,6 +83,8 @@ export async function POST(req: Request) {
       techStack: techStack || [],
       features: features || [],
       sections: sections || [],
+      isPublished,
+      isFeatured,
       githubUrl,
       demoUrl,
     });
@@ -78,7 +95,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       { message: "Failed to create project" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -98,6 +115,8 @@ export async function PUT(req: Request) {
       techStack,
       features,
       sections,
+      isPublished,
+      isFeatured,
       githubUrl,
       demoUrl,
     } = await req.json();
@@ -126,16 +145,18 @@ export async function PUT(req: Request) {
         techStack: techStack || [],
         features: features || [],
         sections: sections || [],
+        isPublished,
+        isFeatured,
         githubUrl,
         demoUrl,
       },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedProject) {
       return NextResponse.json(
         { message: "Project not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -145,7 +166,7 @@ export async function PUT(req: Request) {
 
     return NextResponse.json(
       { message: "Failed to update project" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -165,7 +186,7 @@ export async function DELETE(req: Request) {
     if (!deletedProject) {
       return NextResponse.json(
         { message: "Project not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -175,7 +196,7 @@ export async function DELETE(req: Request) {
 
     return NextResponse.json(
       { message: "Failed to delete project" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

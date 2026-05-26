@@ -30,4 +30,6 @@ export interface Project {
   sections: ProjectSection[];
   githubUrl?: string;
   demoUrl?: string;
+  isPublished: boolean;
+  isFeatured: boolean;
 }

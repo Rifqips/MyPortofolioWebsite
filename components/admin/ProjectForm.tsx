@@ -16,6 +16,8 @@ const emptyProject: Project = {
   techStack: [],
   features: [],
   sections: [],
+  isPublished: true,
+  isFeatured: true,
   githubUrl: "",
   demoUrl: "",
 };
@@ -31,6 +33,10 @@ export default function ProjectForm({ initialData }: Props) {
 
   const [form, setForm] = useState<Project>(initialData || emptyProject);
   const isEdit = Boolean(initialData?._id);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   const handleChange = (key: keyof Project, value: any) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -74,22 +80,45 @@ export default function ProjectForm({ initialData }: Props) {
   };
 
   const handleSubmit = async () => {
-    const url = isEdit ? `/api/projects/${initialData?._id}` : "/api/projects";
+    setIsSubmitting(true);
+    setMessage("");
+    setError("");
 
-    const method = isEdit ? "PUT" : "POST";
+    try {
+      const url = isEdit
+        ? `/api/projects/${initialData?._id}`
+        : "/api/projects";
 
-    await fetch(url, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    });
+      const method = isEdit ? "PUT" : "POST";
 
-    router.push("/admin/dashboard");
-    router.refresh();
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to save project");
+      }
+
+      setMessage(
+        isEdit
+          ? "Project updated successfully"
+          : "Project created successfully",
+      );
+
+      setTimeout(() => {
+        router.push("/admin/dashboard");
+        router.refresh();
+      }, 700);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
-
   return (
     <div className="rounded-3xl border border-slate-800 bg-slate-900/50 p-6">
       <div className="grid gap-5">
@@ -232,12 +261,51 @@ export default function ProjectForm({ initialData }: Props) {
           ))}
         </div>
 
+        <div className="grid gap-4 md:grid-cols-2">
+          <label className="flex items-center gap-3 rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-sm text-slate-300">
+            <input
+              type="checkbox"
+              checked={form.isPublished}
+              onChange={(e) => handleChange("isPublished", e.target.checked)}
+              className="h-4 w-4"
+            />
+            Published
+          </label>
+
+          <label className="flex items-center gap-3 rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-sm text-slate-300">
+            <input
+              type="checkbox"
+              checked={form.isFeatured}
+              onChange={(e) => handleChange("isFeatured", e.target.checked)}
+              className="h-4 w-4"
+            />
+            Featured
+          </label>
+        </div>
+        {message && (
+          <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-300">
+            {message}
+          </div>
+        )}
+
+        {error && (
+          <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
+            {error}
+          </div>
+        )}
         <button
           type="button"
           onClick={handleSubmit}
-          className="rounded-xl bg-sky-500 px-5 py-3 font-medium text-white"
+          disabled={isSubmitting}
+          className="rounded-xl bg-sky-500 px-5 py-3 font-medium text-white transition hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isEdit ? "Update Project" : "Create Project"}
+          {isSubmitting
+            ? isEdit
+              ? "Updating..."
+              : "Creating..."
+            : isEdit
+              ? "Update Project"
+              : "Create Project"}
         </button>
       </div>
     </div>

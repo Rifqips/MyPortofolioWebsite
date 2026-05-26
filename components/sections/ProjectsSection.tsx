@@ -13,14 +13,30 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 
+const categories = [
+  "all",
+  "web",
+  "android",
+  "ios",
+  "mobile",
+  "backend",
+  "fullstack",
+  "design",
+];
+
 export default function ProjectsSection() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [activeCategory, setActiveCategory] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProjects() {
       try {
-        const res = await fetch("/api/projects?limit=10");
+        setIsLoading(true);
+
+        const res = await fetch(
+          `/api/projects?limit=10&featured=true&category=${activeCategory}`,
+        );
 
         if (!res.ok) {
           throw new Error("Failed to fetch projects");
@@ -37,7 +53,7 @@ export default function ProjectsSection() {
     }
 
     fetchProjects();
-  }, []);
+  }, [activeCategory]);
 
   return (
     <section
@@ -48,6 +64,23 @@ export default function ProjectsSection() {
         <SectionHeading title="Featured Projects" subtitle="Portfolio" />
 
         <FadeIn>
+          <div className="mb-8 flex flex-wrap gap-3">
+            {categories.map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setActiveCategory(category)}
+                className={`rounded-full border px-4 py-2 text-sm capitalize transition ${
+                  activeCategory === category
+                    ? "border-sky-500 bg-sky-500 text-white"
+                    : "border-slate-700 text-slate-400 hover:border-sky-500 hover:text-sky-400"
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+
           {isLoading ? (
             <div className="rounded-3xl border border-slate-800 bg-slate-900/40 p-8 text-slate-400">
               Loading projects...
@@ -75,7 +108,10 @@ export default function ProjectsSection() {
               className="project-swiper pb-14"
             >
               {projects.map((project) => (
-                <SwiperSlide key={project._id || project.slug} className="h-auto">
+                <SwiperSlide
+                  key={project._id || project.slug}
+                  className="h-auto"
+                >
                   <ProjectCard project={project} />
                 </SwiperSlide>
               ))}

@@ -11,7 +11,7 @@ const ProjectSectionSchema = new Schema(
       default: [],
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const ProjectSchema = new Schema(
@@ -30,7 +30,16 @@ const ProjectSchema = new Schema(
     category: {
       type: String,
       required: true,
-      enum: ["web", "android", "ios", "mobile", "backend", "fullstack", "design", "other"],
+      enum: [
+        "web",
+        "android",
+        "ios",
+        "mobile",
+        "backend",
+        "fullstack",
+        "design",
+        "other",
+      ],
       default: "web",
     },
 
@@ -64,6 +73,16 @@ const ProjectSchema = new Schema(
       default: [],
     },
 
+    isPublished: {
+      type: Boolean,
+      default: true,
+    },
+
+    isFeatured: {
+      type: Boolean,
+      default: true,
+    },
+
     githubUrl: {
       type: String,
     },
@@ -74,7 +93,7 @@ const ProjectSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const Project =
