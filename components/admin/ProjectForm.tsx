@@ -39,35 +39,34 @@ export default function ProjectForm({ initialData }: Props) {
   const [error, setError] = useState("");
 
   const handleChange = (key: keyof Project, value: any) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
+    setForm((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
   };
 
-  const handleCommaChange = (key: "techStack" | "features", value: string) => {
-    handleChange(
-      key,
-      value
-        .split(",")
-        .map((item) => item.trim())
-        .filter(Boolean),
-    );
-  };
+  const textToArray = (value: string) =>
+    value
+      .split("\n")
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+  const arrayToText = (items?: string[]) => items?.join("\n") || "";
 
   const addSection = () => {
-    handleChange("sections", [...form.sections, { title: "", items: [] }]);
+    handleChange("sections", [
+      ...form.sections,
+      {
+        title: "",
+        items: [],
+      },
+    ]);
   };
 
   const updateSectionTitle = (index: number, title: string) => {
     const updated = [...form.sections];
-    updated[index].title = title;
-    handleChange("sections", updated);
-  };
 
-  const updateSectionItems = (index: number, value: string) => {
-    const updated = [...form.sections];
-    updated[index].items = value
-      .split(",")
-      .map((item) => item.trim())
-      .filter(Boolean);
+    updated[index].title = title;
 
     handleChange("sections", updated);
   };
@@ -119,6 +118,7 @@ export default function ProjectForm({ initialData }: Props) {
       setIsSubmitting(false);
     }
   };
+
   return (
     <div className="rounded-3xl border border-slate-800 bg-slate-900/50 p-6">
       <div className="grid gap-5">
@@ -127,6 +127,7 @@ export default function ProjectForm({ initialData }: Props) {
             value={form.title}
             onChange={(e) => {
               const title = e.target.value;
+
               handleChange("title", title);
 
               if (!isEdit) {
@@ -173,14 +174,14 @@ export default function ProjectForm({ initialData }: Props) {
           value={form.description}
           onChange={(e) => handleChange("description", e.target.value)}
           placeholder="Short description"
-          className="input-admin min-h-24"
+          className="input-admin min-h-28 resize-none"
         />
 
         <textarea
           value={form.longDescription}
           onChange={(e) => handleChange("longDescription", e.target.value)}
           placeholder="Long description"
-          className="input-admin min-h-32"
+          className="input-admin min-h-40 resize-none"
         />
 
         <ImageUpload
@@ -189,18 +190,30 @@ export default function ProjectForm({ initialData }: Props) {
         />
 
         <div className="grid gap-4 md:grid-cols-2">
-          <input
-            value={form.techStack.join(", ")}
-            onChange={(e) => handleCommaChange("techStack", e.target.value)}
-            placeholder="Tech Stack: Next.js, MongoDB, TailwindCSS"
-            className="input-admin"
+          <textarea
+            value={arrayToText(form.techStack)}
+            onChange={(e) =>
+              handleChange("techStack", textToArray(e.target.value))
+            }
+            placeholder={`Tech Stack:
+            Next.js
+            TypeScript
+            TailwindCSS
+            MongoDB`}
+            className="input-admin min-h-36 resize-none"
           />
 
-          <input
-            value={form.features.join(", ")}
-            onChange={(e) => handleCommaChange("features", e.target.value)}
-            placeholder="Features: Login, Dashboard, CRUD"
-            className="input-admin"
+          <textarea
+            value={arrayToText(form.features)}
+            onChange={(e) =>
+              handleChange("features", textToArray(e.target.value))
+            }
+            placeholder={`Features:
+            Admin dashboard
+            Project CRUD
+            Cloudinary upload
+            Dynamic project detail`}
+            className="input-admin min-h-36 resize-none"
           />
 
           <input
@@ -243,11 +256,20 @@ export default function ProjectForm({ initialData }: Props) {
                 className="input-admin"
               />
 
-              <input
-                value={section.items.join(", ")}
-                onChange={(e) => updateSectionItems(index, e.target.value)}
-                placeholder="Items: MVVM, Clean Architecture, Room"
-                className="input-admin"
+              <textarea
+                value={arrayToText(section.items)}
+                onChange={(e) => {
+                  const updated = [...form.sections];
+
+                  updated[index].items = textToArray(e.target.value);
+
+                  handleChange("sections", updated);
+                }}
+                placeholder={`Items:
+                MVVM
+                Clean Architecture
+                Repository Pattern`}
+                className="input-admin min-h-28 resize-none"
               />
 
               <button
@@ -282,6 +304,7 @@ export default function ProjectForm({ initialData }: Props) {
             Featured
           </label>
         </div>
+
         {message && (
           <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-300">
             {message}
@@ -293,6 +316,7 @@ export default function ProjectForm({ initialData }: Props) {
             {error}
           </div>
         )}
+
         <button
           type="button"
           onClick={handleSubmit}

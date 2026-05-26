@@ -28,8 +28,8 @@ export interface Project {
   imageUrl: string;
   features: string[];
   sections: ProjectSection[];
+  isPublished?: boolean;
+  isFeatured?: boolean;
   githubUrl?: string;
   demoUrl?: string;
-  isPublished: boolean;
-  isFeatured: boolean;
 }
