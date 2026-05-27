@@ -33,9 +33,9 @@ export default function ProjectsSection() {
           throw new Error("Failed to fetch projects");
         }
 
-        const data = await res.json();
+        const result = await res.json();
 
-        setProjects(data);
+        setProjects(result.data || []);
       } catch (error) {
         console.error("FETCH_PROJECTS_ERROR:", error);
       } finally {
@@ -83,18 +83,12 @@ export default function ProjectsSection() {
           ) : (
             <Swiper
               modules={[Pagination]}
-              pagination={{
-                clickable: true,
-              }}
+              pagination={{ clickable: true }}
               spaceBetween={24}
               slidesPerView={1}
               breakpoints={{
-                768: {
-                  slidesPerView: 2,
-                },
-                1024: {
-                  slidesPerView: 2,
-                },
+                768: { slidesPerView: 2 },
+                1024: { slidesPerView: 2 },
               }}
               className="project-swiper pb-14"
             >
