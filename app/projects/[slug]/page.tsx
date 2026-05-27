@@ -25,6 +25,13 @@ export default async function ProjectDetailPage({ params }: Props) {
     notFound();
   }
 
+  const toChips = (items?: string[]) => {
+    return items
+      ?.flatMap((item) => item.split(","))
+      .map((item) => item.trim())
+      .filter(Boolean);
+  };
+
   return (
     <main className="background-grid min-h-screen pt-24">
       <div className="background-glow" />
@@ -70,16 +77,16 @@ export default async function ProjectDetailPage({ params }: Props) {
             <div>
               <h2 className="mb-5 text-2xl font-semibold">Features</h2>
 
-              <ul className="space-y-4">
-                {project.features.map((feature) => (
-                  <li
+              <div className="flex flex-wrap gap-3">
+                {toChips(project.features)?.map((feature) => (
+                  <span
                     key={feature}
-                    className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 text-slate-300"
+                    className="rounded-full border border-slate-700 bg-slate-900/60 px-4 py-2 text-sm text-slate-300"
                   >
                     {feature}
-                  </li>
+                  </span>
                 ))}
-              </ul>
+              </div>
             </div>
 
             {project.sections?.length > 0 && (
@@ -96,17 +103,16 @@ export default async function ProjectDetailPage({ params }: Props) {
                         {section.title}
                       </h3>
 
-                      <ul className="space-y-3">
-                        {section.items.map((item) => (
-                          <li
+                      <div className="flex flex-wrap gap-3">
+                        {toChips(section.items)?.map((item) => (
+                          <span
                             key={item}
-                            className="flex gap-3 text-sm leading-relaxed text-slate-400"
+                            className="rounded-full border border-slate-700 bg-slate-900/60 px-4 py-2 text-sm text-slate-300"
                           >
-                            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sky-400" />
-                            <span>{item}</span>
-                          </li>
+                            {item}
+                          </span>
                         ))}
-                      </ul>
+                      </div>
                     </div>
                   ))}
                 </div>

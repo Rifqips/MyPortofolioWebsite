@@ -8,6 +8,13 @@ interface Props {
 }
 
 export default function ProjectCard({ project }: Props) {
+  const toChips = (items?: string[]) => {
+    return items
+      ?.flatMap((item) => item.split(","))
+      .map((item) => item.trim())
+      .filter(Boolean);
+  };
+
   return (
     <Link
       href={`/projects/${project.slug}`}
@@ -50,11 +57,20 @@ export default function ProjectCard({ project }: Props) {
           {project.description}
         </p>
 
-        <div className="mt-auto flex flex-wrap gap-3">
-          {project.techStack.map((tech) => (
+        <div className="mt-auto flex flex-wrap gap-2">
+          {toChips(project.techStack)?.map((tech) => (
             <span
               key={tech}
-              className="rounded-full border border-slate-700 px-4 py-2 text-sm text-slate-300"
+              className="
+        rounded-full
+        border
+        border-sky-500/30
+        bg-sky-500/10
+        px-3
+        py-1
+        text-xs
+        text-sky-300
+      "
             >
               {tech}
             </span>
