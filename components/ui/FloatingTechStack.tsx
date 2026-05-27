@@ -3,12 +3,12 @@
 import { motion } from "framer-motion";
 
 const techStacks = [
-  "Kotlin",
-  "Jetpack Compose",
-  "Next.js",
-  "TypeScript",
-  "TailwindCSS",
-  "MongoDB",
+  "Modern Digital Solutions",
+  "Scalable System Design",
+  "Secure Application Development",
+  "Responsive User Interface",
+  "Performance Optimization",
+  "Business Automation",
 ];
 
 export default function FloatingTechStack() {
