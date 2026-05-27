@@ -99,6 +99,7 @@ export default function ContactSection() {
               </label>
 
               <textarea
+                required
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Tell me about your project, goals, timeline, or features you need..."
@@ -120,9 +121,8 @@ export default function ContactSection() {
             )}
 
             <button
-              type="button"
-              onClick={handleSendEmail}
-              disabled={!email || !message || isSending}
+              type="submit"
+              disabled={isSending}
               className="inline-flex w-full items-center justify-center rounded-2xl bg-sky-500 px-8 py-4 font-medium text-white transition hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-50 md:w-auto"
             >
               {isSending ? "Sending..." : "Send Email"}
