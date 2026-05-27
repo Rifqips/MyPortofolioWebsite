@@ -10,7 +10,7 @@ export default function Footer() {
 
         <div className="flex items-center gap-3">
           <Link
-            href="https://github.com/rifqipadi99"
+            href="https://github.com/Rifqips"
             target="_blank"
             rel="noreferrer"
             className="rounded-full border border-slate-700 px-4 py-2 text-sm text-slate-400 transition hover:border-sky-500 hover:text-sky-400"
