@@ -1,36 +1,169 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+````md
+# Rifqi Portfolio Website
 
-## Getting Started
+Modern fullstack developer portfolio built with Next.js App Router, MongoDB, and TailwindCSS.
 
-First, run the development server:
+## ✨ Features
+
+- Dynamic project detail page
+- Admin dashboard CMS
+- CRUD project management
+- MongoDB integration
+- Cloudinary image upload
+- Featured & published project system
+- Dynamic category filtering
+- Responsive modern UI
+- Framer Motion animations
+- Swiper slider integration
+- Dynamic slug routing
+- Project sections & tech stack chips
+- Production-ready deployment
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+- Next.js 15
+- React
+- TypeScript
+- TailwindCSS
+- Framer Motion
+- Swiper.js
+
+### Backend
+- Next.js API Routes
+- MongoDB
+- Mongoose
+
+### Deployment
+- Vercel
+- Cloudinary
+
+---
+
+## 📁 Project Structure
+
+```bash
+app/
+ ├── api/
+ ├── admin/
+ ├── projects/
+ └── page.tsx
+
+components/
+ ├── admin/
+ ├── layout/
+ ├── sections/
+ ├── ui/
+ └── animations/
+
+lib/
+ └── mongodb.ts
+
+models/
+ └── Project.ts
+````
+
+---
+
+## ⚙️ Environment Variables
+
+Create `.env.local`
+
+```env
+MONGODB_URI=your_mongodb_uri
+
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
+
+ADMIN_PASSWORD=your_admin_password
+```
+
+---
+
+## 🚀 Getting Started
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```txt
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🔐 Admin Dashboard
 
-To learn more about Next.js, take a look at the following resources:
+Access admin dashboard:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```txt
+/admin/dashboard
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Features:
 
-## Deploy on Vercel
+* Create project
+* Edit project
+* Delete project
+* Upload images
+* Manage featured project
+* Manage publication status
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📸 Screenshots
+
+### Homepage
+
+Modern animated portfolio homepage with featured projects.
+
+### Admin Dashboard
+
+Full project CMS management system.
+
+---
+
+## 🌐 Live Demo
+
+```txt
+https://rifqips-website.vercel.app
+```
+
+---
+
+## 👨‍💻 Author
+
+Rifqi Padi Siliwangi
+
+GitHub:
+
+```txt
+https://github.com/rifqipadi99
+```
+
+LinkedIn:
+
+```txt
+https://linkedin.com/in/YOUR_USERNAME
+```
+
+---
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+```
+```
