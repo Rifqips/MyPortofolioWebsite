@@ -5,20 +5,33 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   try {
-    const { subject, message } = await req.json();
+    const { email, message } = await req.json();
 
-    if (!subject || !message) {
+    if (!email || !message) {
       return NextResponse.json(
-        { message: "Subject and message are required" },
-        { status: 400 },
+        {
+          message: "Email and message are required",
+        },
+        {
+          status: 400,
+        },
       );
     }
 
     await resend.emails.send({
       from: "Portfolio Contact <onboarding@resend.dev>",
-      to: process.env.CONTACT_EMAIL || "rifqipadi99@gmail.com",
-      subject,
-      text: message,
+      to: "rifqipadi99@gmail.com",
+
+      // SUBJECT OTOMATIS
+      subject: `New Client Message from ${email}`,
+
+      text: `
+Client Email:
+${email}
+
+Message:
+${message}
+      `,
     });
 
     return NextResponse.json({
@@ -28,8 +41,12 @@ export async function POST(req: Request) {
     console.error("SEND_EMAIL_ERROR:", error);
 
     return NextResponse.json(
-      { message: "Failed to send email" },
-      { status: 500 },
+      {
+        message: "Failed to send email",
+      },
+      {
+        status: 500,
+      },
     );
   }
 }

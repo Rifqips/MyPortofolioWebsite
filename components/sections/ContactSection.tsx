@@ -5,7 +5,7 @@ import { useState } from "react";
 import SectionHeading from "../ui/SectionHeading";
 
 export default function ContactSection() {
-  const [subject, setSubject] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -23,7 +23,7 @@ export default function ContactSection() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          subject,
+          email,
           message,
         }),
       });
@@ -33,7 +33,7 @@ export default function ContactSection() {
       }
 
       setSuccessMessage("Your message has been sent successfully.");
-      setSubject("");
+      setEmail("");
       setMessage("");
     } catch (error) {
       console.error("SEND_EMAIL_ERROR:", error);
@@ -68,11 +68,28 @@ export default function ContactSection() {
               </label>
 
               <input
-                type="text"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                placeholder="Example:user@gmail.com"
-                className="w-full rounded-2xl border border-slate-800 bg-slate-950/70 px-4 py-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                className="
+                  w-full
+                  rounded-2xl
+                  border
+                  border-slate-800
+                  bg-slate-950/70
+                  px-4
+                  py-4
+                  text-sm
+                  text-white
+                  outline-none
+                  transition
+                  placeholder:text-slate-500
+                  focus:border-sky-500
+                  focus:ring-2
+                  focus:ring-sky-500/20
+                "
               />
             </div>
 
@@ -105,7 +122,7 @@ export default function ContactSection() {
             <button
               type="button"
               onClick={handleSendEmail}
-              disabled={!subject || !message || isSending}
+              disabled={!email || !message || isSending}
               className="inline-flex w-full items-center justify-center rounded-2xl bg-sky-500 px-8 py-4 font-medium text-white transition hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-50 md:w-auto"
             >
               {isSending ? "Sending..." : "Send Email"}
