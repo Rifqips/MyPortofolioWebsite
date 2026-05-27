@@ -1,39 +1,129 @@
+"use client";
+
+import { useState } from "react";
+
 import SectionHeading from "../ui/SectionHeading";
 
 export default function ContactSection() {
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+
+  const email = "rifqipadi99@gmail.com";
+
+  const handleSendEmail = () => {
+    const mailtoUrl = `mailto:${email}?subject=${encodeURIComponent(
+      subject,
+    )}&body=${encodeURIComponent(message)}`;
+
+    window.location.href = mailtoUrl;
+  };
+
   return (
     <section
       id="contact"
       className="section-anchor section-spacing border-t border-slate-800"
     >
-      <div className="container-layout text-center">
+      <div className="container-layout">
         <SectionHeading
-          title="Let's Work Together"
+          title="Let’s Build Something Great"
           subtitle="Contact"
         />
 
-        <p className="mx-auto mb-8 max-w-2xl text-lg text-slate-400">
-          Interested in collaborating or discussing
-          technology, Android development, or fullstack
-          engineering? Feel free to reach out.
-        </p>
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="mb-10 text-lg text-slate-400">
+            Looking for a developer to build modern Android or web applications?
+            I help businesses and clients create scalable, responsive, and
+            user-friendly digital products. Let’s discuss your next project.
+          </p>
 
-        <a
-          href="mailto:rifqipadi99@gmail.com"
-          className="
-            inline-flex
-            rounded-2xl
-            bg-sky-500
-            px-8
-            py-4
-            font-medium
-            text-white
-            transition
-            hover:bg-sky-400
-          "
-        >
-          Say Hello
-        </a>
+          <div className="rounded-3xl border border-slate-800 bg-slate-900/50 p-6 text-left shadow-2xl shadow-slate-950/30 md:p-8">
+            <div className="mb-5">
+              <label className="mb-2 block text-sm font-medium text-slate-300">
+                Email Title
+              </label>
+
+              <input
+                type="text"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                placeholder="Example: Android App Development Project"
+                className="
+                  w-full
+                  rounded-2xl
+                  border
+                  border-slate-800
+                  bg-slate-950/70
+                  px-4
+                  py-4
+                  text-sm
+                  text-white
+                  outline-none
+                  transition
+                  placeholder:text-slate-500
+                  focus:border-sky-500
+                  focus:ring-2
+                  focus:ring-sky-500/20
+                "
+              />
+            </div>
+
+            <div className="mb-6">
+              <label className="mb-2 block text-sm font-medium text-slate-300">
+                Message
+              </label>
+
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Tell me about your project, goals, timeline, or features you need..."
+                rows={6}
+                className="
+                  w-full
+                  resize-none
+                  rounded-2xl
+                  border
+                  border-slate-800
+                  bg-slate-950/70
+                  px-4
+                  py-4
+                  text-sm
+                  text-white
+                  outline-none
+                  transition
+                  placeholder:text-slate-500
+                  focus:border-sky-500
+                  focus:ring-2
+                  focus:ring-sky-500/20
+                "
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={handleSendEmail}
+              disabled={!subject || !message}
+              className="
+                inline-flex
+                w-full
+                items-center
+                justify-center
+                rounded-2xl
+                bg-sky-500
+                px-8
+                py-4
+                font-medium
+                text-white
+                transition
+                hover:bg-sky-400
+                disabled:cursor-not-allowed
+                disabled:opacity-50
+                md:w-auto
+              "
+            >
+              Send Email
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   );
