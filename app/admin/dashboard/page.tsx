@@ -10,6 +10,13 @@ export default async function AdminDashboardPage() {
 
   const projects = await Project.find({}).sort({ createdAt: -1 }).lean();
 
+  const toChips = (items?: string[]) => {
+    return items
+      ?.flatMap((item) => item.split(","))
+      .map((item) => item.trim())
+      .filter(Boolean);
+  };
+
   return (
     <main className="min-h-screen bg-slate-950 px-6 py-10 text-white">
       <div className="mx-auto max-w-6xl">
@@ -121,9 +128,25 @@ export default async function AdminDashboardPage() {
                             {section.title}
                           </p>
 
-                          <p className="mt-1 text-slate-400">
-                            {section.items.join(", ")}
-                          </p>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {toChips(section.items)?.map((item) => (
+                              <span
+                                key={item}
+                                className="
+                                  rounded-full
+                                  border
+                                  border-slate-700
+                                  bg-slate-900/70
+                                  px-3
+                                  py-1
+                                  text-xs
+                                  text-slate-300
+                                "
+                              >
+                                {item}
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       ))}
                     </div>
