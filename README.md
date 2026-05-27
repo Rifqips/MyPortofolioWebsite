@@ -150,13 +150,13 @@ Rifqi Padi Siliwangi
 GitHub:
 
 ```txt
-https://github.com/rifqipadi99
+https://github.com/Rifqips
 ```
 
 LinkedIn:
 
 ```txt
-https://linkedin.com/in/YOUR_USERNAME
+https://www.linkedin.com/in/rifqips/
 ```
 
 ---
