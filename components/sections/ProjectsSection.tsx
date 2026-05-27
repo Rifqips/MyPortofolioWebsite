@@ -26,7 +26,7 @@ export default function ProjectsSection() {
         setIsLoading(true);
 
         const res = await fetch(
-          `/api/projects?limit=10&featured=true&category=${activeCategory}`,
+          `/api/projects?limit=10&category=${activeCategory}`,
         );
 
         if (!res.ok) {
