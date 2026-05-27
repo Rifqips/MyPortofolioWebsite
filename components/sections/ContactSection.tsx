@@ -7,15 +7,40 @@ import SectionHeading from "../ui/SectionHeading";
 export default function ContactSection() {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const email = "rifqipadi99@gmail.com";
+  const handleSendEmail = async () => {
+    setIsSending(true);
+    setSuccessMessage("");
+    setErrorMessage("");
 
-  const handleSendEmail = () => {
-    const mailtoUrl = `mailto:${email}?subject=${encodeURIComponent(
-      subject,
-    )}&body=${encodeURIComponent(message)}`;
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          subject,
+          message,
+        }),
+      });
 
-    window.location.href = mailtoUrl;
+      if (!res.ok) {
+        throw new Error("Failed to send email");
+      }
+
+      setSuccessMessage("Your message has been sent successfully.");
+      setSubject("");
+      setMessage("");
+    } catch (error) {
+      console.error("SEND_EMAIL_ERROR:", error);
+      setErrorMessage("Failed to send message. Please try again.");
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -47,23 +72,7 @@ export default function ContactSection() {
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 placeholder="Example: Android App Development Project"
-                className="
-                  w-full
-                  rounded-2xl
-                  border
-                  border-slate-800
-                  bg-slate-950/70
-                  px-4
-                  py-4
-                  text-sm
-                  text-white
-                  outline-none
-                  transition
-                  placeholder:text-slate-500
-                  focus:border-sky-500
-                  focus:ring-2
-                  focus:ring-sky-500/20
-                "
+                className="w-full rounded-2xl border border-slate-800 bg-slate-950/70 px-4 py-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
               />
             </div>
 
@@ -77,50 +86,29 @@ export default function ContactSection() {
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Tell me about your project, goals, timeline, or features you need..."
                 rows={6}
-                className="
-                  w-full
-                  resize-none
-                  rounded-2xl
-                  border
-                  border-slate-800
-                  bg-slate-950/70
-                  px-4
-                  py-4
-                  text-sm
-                  text-white
-                  outline-none
-                  transition
-                  placeholder:text-slate-500
-                  focus:border-sky-500
-                  focus:ring-2
-                  focus:ring-sky-500/20
-                "
+                className="w-full resize-none rounded-2xl border border-slate-800 bg-slate-950/70 px-4 py-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
               />
             </div>
+
+            {successMessage && (
+              <div className="mb-5 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-300">
+                {successMessage}
+              </div>
+            )}
+
+            {errorMessage && (
+              <div className="mb-5 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
+                {errorMessage}
+              </div>
+            )}
 
             <button
               type="button"
               onClick={handleSendEmail}
-              disabled={!subject || !message}
-              className="
-                inline-flex
-                w-full
-                items-center
-                justify-center
-                rounded-2xl
-                bg-sky-500
-                px-8
-                py-4
-                font-medium
-                text-white
-                transition
-                hover:bg-sky-400
-                disabled:cursor-not-allowed
-                disabled:opacity-50
-                md:w-auto
-              "
+              disabled={!subject || !message || isSending}
+              className="inline-flex w-full items-center justify-center rounded-2xl bg-sky-500 px-8 py-4 font-medium text-white transition hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-50 md:w-auto"
             >
-              Send Email
+              {isSending ? "Sending..." : "Send Email"}
             </button>
           </div>
         </div>
