@@ -64,14 +64,14 @@ export default function ContactSection() {
           <div className="rounded-3xl border border-slate-800 bg-slate-900/50 p-6 text-left shadow-2xl shadow-slate-950/30 md:p-8">
             <div className="mb-5">
               <label className="mb-2 block text-sm font-medium text-slate-300">
-                Email Title
+                Your Email
               </label>
 
               <input
                 type="text"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                placeholder="Example: Android App Development Project"
+                placeholder="Example:user@gmail.com"
                 className="w-full rounded-2xl border border-slate-800 bg-slate-950/70 px-4 py-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
               />
             </div>
