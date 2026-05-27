@@ -124,10 +124,19 @@ export default async function ProjectDetailPage({ params }: Props) {
             <h2 className="mb-5 text-xl font-semibold">Tech Stack</h2>
 
             <div className="mb-8 flex flex-wrap gap-3">
-              {project.techStack.map((tech) => (
+              {toChips(project.techStack)?.map((tech) => (
                 <span
                   key={tech}
-                  className="rounded-full border border-slate-700 px-4 py-2 text-sm text-slate-300"
+                  className="
+                    rounded-full
+                    border
+                    border-sky-500/30
+                    bg-sky-500/10
+                    px-4
+                    py-2
+                    text-sm
+                    text-sky-300
+                  "
                 >
                   {tech}
                 </span>
