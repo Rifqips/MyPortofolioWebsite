@@ -13,8 +13,8 @@ export default async function AdminDashboardPage() {
 
   return (
     <main className="min-h-screen bg-slate-950 px-4 py-8 text-white md:px-8">
-      <div className="mx-auto max-w-5xl">
-        <section className="mb-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl shadow-black/20">
+      <div className="mx-auto max-w-6xl">
+        <section className="mb-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-6">
           <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="mb-2 font-mono text-xs text-sky-400">
@@ -25,9 +25,8 @@ export default async function AdminDashboardPage() {
                 Project Management
               </h1>
 
-              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
-                Manage portfolio projects, images, tech stack, publication
-                status, and featured projects.
+              <p className="mt-2 text-sm text-slate-400">
+                Manage portfolio projects, images, tech stack, and publication status.
               </p>
             </div>
 
@@ -52,149 +51,129 @@ export default async function AdminDashboardPage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-5">
+          <div className="grid gap-6 md:grid-cols-2">
             {projects.map((project: any) => (
               <article
                 key={project._id.toString()}
-                className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/60 shadow-lg shadow-black/10 transition hover:border-sky-500/40"
+                className="group overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 shadow-lg shadow-black/10 transition hover:-translate-y-1 hover:border-sky-500/50 hover:shadow-sky-500/10"
               >
-                <div className="grid md:grid-cols-[260px_1fr]">
-                  <div className="relative h-52 bg-slate-900 md:h-full md:min-h-[300px]">
-                    <Image
-                      src={project.imageUrl}
-                      alt={project.title}
-                      fill
-                      className="object-cover"
-                    />
+                <div className="relative h-56 w-full overflow-hidden bg-slate-900">
+                  <Image
+                    src={project.imageUrl}
+                    alt={project.title}
+                    fill
+                    className="object-cover transition duration-500 group-hover:scale-105"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/10 to-transparent" />
+
+                  <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+                    <Badge color="sky">{project.category}</Badge>
+
+                    <Badge color={project.isPublished ? "green" : "red"}>
+                      {project.isPublished ? "Published" : "Draft"}
+                    </Badge>
+
+                    {project.isFeatured && (
+                      <Badge color="yellow">Featured</Badge>
+                    )}
+                  </div>
+                </div>
+
+                <div className="p-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h2 className="line-clamp-2 text-xl font-bold leading-snug">
+                        {project.title}
+                      </h2>
+
+                      <p className="mt-1 text-sm text-sky-300">
+                        {project.year || "2026"}
+                      </p>
+                    </div>
+
+                    <div className="flex shrink-0 gap-2">
+                      <Link
+                        href={`/admin/dashboard/edit/${project._id.toString()}`}
+                        className="rounded-xl border border-slate-700 px-3 py-2 text-xs text-slate-300 transition hover:border-sky-500 hover:text-sky-400"
+                      >
+                        Edit
+                      </Link>
+
+                      <DeleteProjectButton id={project._id.toString()} />
+                    </div>
                   </div>
 
-                  <div className="p-5 md:p-6">
-                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                      <div className="min-w-0">
-                        <div className="mb-3 flex flex-wrap gap-2">
-                          <Badge color="sky">{project.category}</Badge>
+                  <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-slate-400">
+                    {project.description}
+                  </p>
 
-                          <Badge color={project.isPublished ? "green" : "red"}>
-                            {project.isPublished ? "Published" : "Draft"}
-                          </Badge>
+                  {project.techStack?.length > 0 && (
+                    <div className="mt-5">
+                      <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        Tech Stack
+                      </h3>
 
-                          {project.isFeatured && (
-                            <Badge color="yellow">Featured</Badge>
-                          )}
-                        </div>
+                      <div className="flex flex-wrap gap-2">
+                        {project.techStack.slice(0, 8).map((tech: string) => (
+                          <span
+                            key={tech}
+                            className="rounded-full border border-sky-500/20 bg-sky-500/10 px-3 py-1 text-xs text-sky-300"
+                          >
+                            {tech}
+                          </span>
+                        ))}
 
-                        <h2 className="text-xl font-bold leading-snug md:text-2xl">
-                          {project.title}
-                        </h2>
-
-                        <p className="mt-1 text-sm text-sky-300">
-                          {project.year || "2026"}
-                        </p>
-                      </div>
-
-                      <div className="flex shrink-0 gap-2">
-                        <Link
-                          href={`/admin/dashboard/edit/${project._id.toString()}`}
-                          className="rounded-xl border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:border-sky-500 hover:text-sky-400"
-                        >
-                          Edit
-                        </Link>
-
-                        <DeleteProjectButton id={project._id.toString()} />
+                        {project.techStack.length > 8 && (
+                          <span className="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-400">
+                            +{project.techStack.length - 8}
+                          </span>
+                        )}
                       </div>
                     </div>
+                  )}
 
-                    <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-slate-400">
-                      {project.description}
-                    </p>
+                  {project.features?.length > 0 && (
+                    <div className="mt-5">
+                      <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        Features
+                      </h3>
 
-                    {project.longDescription && (
-                      <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-slate-500">
-                        {project.longDescription}
-                      </p>
-                    )}
-
-                    {project.techStack?.length > 0 && (
-                      <InfoBlock title="Tech Stack">
-                        <div className="flex flex-wrap gap-2">
-                          {project.techStack.map((tech: string) => (
-                            <span
-                              key={tech}
-                              className="rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-xs text-sky-300"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </InfoBlock>
-                    )}
-
-                    {project.features?.length > 0 && (
-                      <InfoBlock title="Features">
-                        <div className="grid gap-2 md:grid-cols-2">
-                          {project.features.slice(0, 4).map((feature: string) => (
-                            <div
-                              key={feature}
-                              className="rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3 text-sm leading-relaxed text-slate-300"
-                            >
-                              {feature}
-                            </div>
-                          ))}
-                        </div>
-                      </InfoBlock>
-                    )}
-
-                    {project.sections?.length > 0 && (
-                      <InfoBlock title="Sections">
-                        <div className="grid gap-3 md:grid-cols-2">
-                          {project.sections.map((section: any) => (
-                            <div
-                              key={section.title}
-                              className="rounded-xl border border-slate-800 bg-slate-950/50 p-4"
-                            >
-                              <p className="mb-2 text-sm font-semibold text-white">
-                                {section.title}
-                              </p>
-
-                              <div className="flex flex-wrap gap-2">
-                                {section.items?.map((item: string) => (
-                                  <span
-                                    key={item}
-                                    className="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-300"
-                                  >
-                                    {item}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </InfoBlock>
-                    )}
-
-                    <div className="mt-6 flex flex-wrap gap-3 border-t border-slate-800 pt-5">
-                      {project.githubUrl && (
-                        <a
-                          href={project.githubUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="rounded-xl border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:border-white hover:text-white"
-                        >
-                          Github
-                        </a>
-                      )}
-
-                      {project.demoUrl && (
-                        <a
-                          href={project.demoUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="rounded-xl bg-sky-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-400"
-                        >
-                          Live Demo
-                        </a>
-                      )}
+                      <ul className="space-y-2 text-sm text-slate-300">
+                        {project.features.slice(0, 3).map((feature: string) => (
+                          <li
+                            key={feature}
+                            className="line-clamp-1 rounded-xl border border-slate-800 bg-slate-950/50 px-3 py-2"
+                          >
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
+                  )}
+
+                  <div className="mt-6 flex flex-wrap gap-3 border-t border-slate-800 pt-5">
+                    {project.githubUrl && (
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-xl border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:border-white hover:text-white"
+                      >
+                        Github
+                      </a>
+                    )}
+
+                    {project.demoUrl && (
+                      <a
+                        href={project.demoUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-xl bg-sky-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-400"
+                      >
+                        Live Demo
+                      </a>
+                    )}
                   </div>
                 </div>
               </article>
@@ -214,32 +193,17 @@ function Badge({
   color: "sky" | "green" | "red" | "yellow";
 }) {
   const styles = {
-    sky: "bg-sky-500/10 text-sky-300",
-    green: "bg-emerald-500/10 text-emerald-300",
-    red: "bg-red-500/10 text-red-300",
-    yellow: "bg-yellow-500/10 text-yellow-300",
+    sky: "bg-sky-500/15 text-sky-300",
+    green: "bg-emerald-500/15 text-emerald-300",
+    red: "bg-red-500/15 text-red-300",
+    yellow: "bg-yellow-500/15 text-yellow-300",
   };
 
   return (
     <span
-      className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${styles[color]}`}
+      className={`rounded-full px-3 py-1 text-xs font-semibold capitalize backdrop-blur ${styles[color]}`}
     >
       {children}
     </span>
-  );
-}
-
-function InfoBlock({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="mt-5">
-      <h3 className="mb-3 text-sm font-semibold text-slate-300">{title}</h3>
-      {children}
-    </div>
   );
 }
