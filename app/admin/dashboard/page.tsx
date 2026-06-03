@@ -6,6 +6,9 @@ import { connectMongoDB } from "@/lib/mongodb";
 import DeleteProjectButton from "@/components/admin/DeleteProjectButton";
 import LogoutButton from "@/components/admin/LogoutButton";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function AdminDashboardPage() {
   await connectMongoDB();
 
@@ -26,7 +29,8 @@ export default async function AdminDashboardPage() {
               </h1>
 
               <p className="mt-2 text-sm text-slate-400">
-                Manage portfolio projects, images, tech stack, and publication status.
+                Manage portfolio projects, images, tech stack, and publication
+                status.
               </p>
             </div>
 
