@@ -53,7 +53,7 @@ export default function ProjectCard({ project }: Props) {
           {project.description}
         </p>
 
-        <div className="mt-auto flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2">
           {visibleTechStacks.map((tech) => (
             <span
               key={tech}
