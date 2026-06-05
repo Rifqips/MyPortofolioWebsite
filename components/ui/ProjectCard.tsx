@@ -8,6 +8,8 @@ interface Props {
 }
 
 export default function ProjectCard({ project }: Props) {
+  const MAX_VISIBLE_CHIPS = 9;
+
   const toChips = (items?: string[]) => {
     return items
       ?.flatMap((item) => item.split(","))
@@ -15,23 +17,17 @@ export default function ProjectCard({ project }: Props) {
       .filter(Boolean);
   };
 
+  const techStacks = toChips(project.techStack) || [];
+  const visibleTechStacks = techStacks.slice(0, MAX_VISIBLE_CHIPS);
+  const hiddenCount = techStacks.length - MAX_VISIBLE_CHIPS;
+
   return (
     <Link
       href={`/projects/${project.slug}`}
       className="
-        group
-        flex
-        h-full
-        flex-col
-        overflow-hidden
-        rounded-3xl
-        border
-        border-slate-800
-        bg-slate-900/40
-        transition-all
-        duration-300
-        hover:-translate-y-1
-        hover:border-sky-500
+        group flex h-full flex-col overflow-hidden rounded-3xl border
+        border-slate-800 bg-slate-900/40 transition-all duration-300
+        hover:-translate-y-1 hover:border-sky-500
         hover:shadow-[0_0_40px_rgba(56,189,248,0.08)]
       "
     >
@@ -58,23 +54,20 @@ export default function ProjectCard({ project }: Props) {
         </p>
 
         <div className="mt-auto flex flex-wrap gap-2">
-          {toChips(project.techStack)?.map((tech) => (
+          {visibleTechStacks.map((tech) => (
             <span
               key={tech}
-              className="
-        rounded-full
-        border
-        border-sky-500/30
-        bg-sky-500/10
-        px-3
-        py-1
-        text-xs
-        text-sky-300
-      "
+              className="rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-xs text-sky-300"
             >
               {tech}
             </span>
           ))}
+
+          {hiddenCount > 0 && (
+            <span className="rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-xs text-sky-300">
+              +{hiddenCount}
+            </span>
+          )}
         </div>
       </div>
     </Link>
