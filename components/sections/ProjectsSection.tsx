@@ -94,7 +94,7 @@ export default function ProjectsSection() {
             >
               {projects.map((project) => (
                 <SwiperSlide
-                  key={project._id || project.slug}
+                  key={project.id || project.slug}
                   className="h-auto"
                 >
                   <ProjectCard project={project} />

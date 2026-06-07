@@ -2,9 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import Project from "@/models/Project";
-import { connectMongoDB } from "@/lib/mongodb";
-import { Project as ProjectType } from "@/types/portfolio";
+import { supabase } from "@/lib/supabase";
 
 interface Props {
   params: Promise<{
@@ -15,13 +13,16 @@ interface Props {
 export const dynamic = "force-dynamic";
 
 export default async function ProjectDetailPage({ params }: Props) {
-  await connectMongoDB();
-
   const { slug } = await params;
 
-  const project = await Project.findOne({ slug }).lean<ProjectType>();
+  const { data: project, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("slug", slug)
+    .eq("is_published", true)
+    .single();
 
-  if (!project) {
+  if (error || !project) {
     notFound();
   }
 
@@ -57,14 +58,14 @@ export default async function ProjectDetailPage({ params }: Props) {
             {project.title}
           </h1>
 
-          <p className="max-w-3xl text-lg leading-relaxed text-slate-400">
-            {project.longDescription}
+          <p className="max-w-3xl whitespace-pre-line text-lg leading-relaxed text-slate-400">
+            {project.long_description}
           </p>
         </div>
 
         <div className="relative mb-12 h-[260px] overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 md:h-[480px]">
           <Image
-            src={project.imageUrl}
+            src={project.image_url}
             alt={project.title}
             fill
             priority
@@ -94,27 +95,29 @@ export default async function ProjectDetailPage({ params }: Props) {
                 <h2 className="mb-5 text-2xl font-semibold">Project Details</h2>
 
                 <div className="space-y-5">
-                  {project.sections.map((section) => (
-                    <div
-                      key={section.title}
-                      className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5"
-                    >
-                      <h3 className="mb-4 text-lg font-semibold text-white">
-                        {section.title}
-                      </h3>
+                  {project.sections.map(
+                    (section: { title: string; items: string[] }) => (
+                      <div
+                        key={section.title}
+                        className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5"
+                      >
+                        <h3 className="mb-4 text-lg font-semibold text-white">
+                          {section.title}
+                        </h3>
 
-                      <div className="flex flex-wrap gap-3">
-                        {toChips(section.items)?.map((item) => (
-                          <span
-                            key={item}
-                            className="rounded-full border border-slate-700 bg-slate-900/60 px-4 py-2 text-sm text-slate-300"
-                          >
-                            {item}
-                          </span>
-                        ))}
+                        <div className="flex flex-wrap gap-3">
+                          {toChips(section.items)?.map((item) => (
+                            <span
+                              key={item}
+                              className="rounded-full border border-slate-700 bg-slate-900/60 px-4 py-2 text-sm text-slate-300"
+                            >
+                              {item}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ),
+                  )}
                 </div>
               </div>
             )}
@@ -124,7 +127,7 @@ export default async function ProjectDetailPage({ params }: Props) {
             <h2 className="mb-5 text-xl font-semibold">Tech Stack</h2>
 
             <div className="mb-8 flex flex-wrap gap-3">
-              {toChips(project.techStack)?.map((tech) => (
+              {toChips(project.tech_stack)?.map((tech) => (
                 <span
                   key={tech}
                   className="
@@ -144,9 +147,9 @@ export default async function ProjectDetailPage({ params }: Props) {
             </div>
 
             <div className="flex flex-col gap-3">
-              {project.githubUrl && (
+              {project.github_url && (
                 <a
-                  href={project.githubUrl}
+                  href={project.github_url}
                   target="_blank"
                   rel="noreferrer"
                   className="rounded-xl border border-slate-700 px-5 py-3 text-center text-sm font-medium text-slate-300 transition hover:border-sky-500 hover:text-sky-400"
@@ -155,9 +158,9 @@ export default async function ProjectDetailPage({ params }: Props) {
                 </a>
               )}
 
-              {project.demoUrl && (
+              {project.demo_url && (
                 <a
-                  href={project.demoUrl}
+                  href={project.demo_url}
                   target="_blank"
                   rel="noreferrer"
                   className="rounded-xl bg-sky-500 px-5 py-3 text-center text-sm font-medium text-white transition hover:bg-sky-400"

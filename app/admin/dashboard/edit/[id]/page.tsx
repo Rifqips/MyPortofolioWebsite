@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import Project from "@/models/Project";
-import { connectMongoDB } from "@/lib/mongodb";
+import { supabase } from "@/lib/supabase";
 import ProjectForm from "@/components/admin/ProjectForm";
 
 interface Props {
@@ -12,21 +11,39 @@ interface Props {
 }
 
 export default async function EditProjectPage({ params }: Props) {
-  await connectMongoDB();
-
   const { id } = await params;
 
-  const project = await Project.findById(id).lean();
+  const { data: project, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("id", id)
+    .single();
 
-  if (!project) {
+  if (error || !project) {
     notFound();
   }
 
   const initialData = {
-    ...project,
-    _id: project._id.toString(),
-    createdAt: undefined,
-    updatedAt: undefined,
+    _id: project.id,
+    id: project.id,
+
+    title: project.title,
+    slug: project.slug,
+    category: project.category,
+    description: project.description,
+
+    longDescription: project.long_description,
+    imageUrl: project.image_url,
+
+    techStack: project.tech_stack || [],
+    features: project.features || [],
+    sections: project.sections || [],
+
+    isPublished: project.is_published,
+    isFeatured: project.is_featured,
+
+    githubUrl: project.github_url || "",
+    demoUrl: project.demo_url || "",
   };
 
   return (

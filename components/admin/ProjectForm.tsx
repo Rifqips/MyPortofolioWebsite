@@ -4,9 +4,34 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import ImageUpload from "./ImageUpload";
-import { Project, ProjectCategory } from "@/types/portfolio";
+import { ProjectCategory } from "@/types/portfolio";
 
-const emptyProject: Project = {
+type ProjectFormData = {
+  _id?: string;
+  id?: string;
+  title: string;
+  slug: string;
+  category: ProjectCategory;
+  description: string;
+  longDescription: string;
+  imageUrl: string;
+  techStack: string[];
+  features: string[];
+  sections: {
+    title: string;
+    items: string[];
+  }[];
+  isPublished?: boolean;
+  isFeatured?: boolean;
+  githubUrl?: string;
+  demoUrl?: string;
+};
+
+interface Props {
+  initialData?: ProjectFormData;
+}
+
+const emptyProject: ProjectFormData = {
   title: "",
   slug: "",
   category: "web",
@@ -22,23 +47,19 @@ const emptyProject: Project = {
   demoUrl: "",
 };
 
-interface Props {
-  initialData?: Project & {
-    _id?: string;
-  };
-}
-
 export default function ProjectForm({ initialData }: Props) {
   const router = useRouter();
 
-  const [form, setForm] = useState<Project>(initialData || emptyProject);
+  const [form, setForm] = useState<ProjectFormData>(
+    initialData || emptyProject,
+  );
   const isEdit = Boolean(initialData?._id);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  const handleChange = (key: keyof Project, value: any) => {
+  const handleChange = (key: keyof ProjectFormData, value: any) => {
     setForm((prev) => ({
       ...prev,
       [key]: value,

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { connectMongoDB } from "@/lib/mongodb";
-import Project from "@/models/Project";
+import { supabase } from "@/lib/supabase";
 
 interface Props {
   params: Promise<{
@@ -11,16 +10,18 @@ interface Props {
 
 export async function GET(_request: Request, { params }: Props) {
   try {
-    await connectMongoDB();
-
     const { slug } = await params;
 
-    const project = await Project.findOne({ slug }).lean();
+    const { data: project, error } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("slug", slug)
+      .single();
 
-    if (!project) {
+    if (error || !project) {
       return NextResponse.json(
         { message: "Project not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -30,7 +31,7 @@ export async function GET(_request: Request, { params }: Props) {
 
     return NextResponse.json(
       { message: "Failed to get project" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { connectMongoDB } from "@/lib/mongodb";
-import Project from "@/models/Project";
+import { supabase } from "@/lib/supabase";
 
 // ======================================================
 // GET ALL PROJECTS
@@ -9,8 +8,6 @@ import Project from "@/models/Project";
 
 export async function GET(req: Request) {
   try {
-    await connectMongoDB();
-
     const { searchParams } = new URL(req.url);
 
     const category = searchParams.get("category");
@@ -20,48 +17,40 @@ export async function GET(req: Request) {
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "6");
 
-    // ======================================================
-    // FILTER
-    // ======================================================
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
 
-    const filter: Record<string, unknown> = {};
+    let query = supabase
+      .from("projects")
+      .select("*", { count: "exact" })
+      .order("created_at", { ascending: false })
+      .range(from, to);
 
-    // PUBLIC ONLY
-    // kalau bukan admin -> tampilkan published saja
     if (admin !== "true") {
-      filter.isPublished = true;
+      query = query.eq("is_published", true);
     }
 
-    // FEATURED
     if (featured === "true") {
-      filter.isFeatured = true;
+      query = query.eq("is_featured", true);
     }
 
-    // CATEGORY
     if (category && category !== "all") {
-      filter.category = category;
+      query = query.eq("category", category);
     }
 
-    // ======================================================
-    // QUERY
-    // ======================================================
+    const { data, error, count } = await query;
 
-    const projects = await Project.find(filter)
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
-
-    // TOTAL COUNT
-    const total = await Project.countDocuments(filter);
+    if (error) {
+      throw error;
+    }
 
     return NextResponse.json({
-      data: projects,
+      data,
       pagination: {
-        total,
+        total: count || 0,
         page,
         limit,
-        totalPages: Math.ceil(total / limit),
+        totalPages: Math.ceil((count || 0) / limit),
       },
     });
   } catch (error) {
@@ -84,8 +73,6 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    await connectMongoDB();
-
     const body = await req.json();
 
     const {
@@ -104,10 +91,6 @@ export async function POST(req: Request) {
       demoUrl,
     } = body;
 
-    // ======================================================
-    // VALIDATION
-    // ======================================================
-
     if (
       !title ||
       !slug ||
@@ -116,18 +99,18 @@ export async function POST(req: Request) {
       !longDescription ||
       !imageUrl
     ) {
-      return NextResponse.json(
-        {
-          message: "Invalid input",
-        },
-        {
-          status: 400,
-        },
-      );
+      return NextResponse.json({ message: "Invalid input" }, { status: 400 });
     }
 
-    // CHECK SLUG
-    const existingProject = await Project.findOne({ slug });
+    const { data: existingProject, error: checkError } = await supabase
+      .from("projects")
+      .select("id")
+      .eq("slug", slug)
+      .maybeSingle();
+
+    if (checkError) {
+      throw checkError;
+    }
 
     if (existingProject) {
       return NextResponse.json(
@@ -140,33 +123,34 @@ export async function POST(req: Request) {
       );
     }
 
-    // ======================================================
-    // CREATE
-    // ======================================================
+    const { data, error } = await supabase
+      .from("projects")
+      .insert({
+        title,
+        slug,
+        category,
+        description,
+        long_description: longDescription,
+        image_url: imageUrl,
+        tech_stack: techStack || [],
+        features: features || [],
+        sections: sections || [],
+        is_published: isPublished ?? false,
+        is_featured: isFeatured ?? false,
+        github_url: githubUrl || "",
+        demo_url: demoUrl || "",
+      })
+      .select("*")
+      .single();
 
-    const newProject = await Project.create({
-      title,
-      slug,
-      category,
-      description,
-      longDescription,
-      imageUrl,
-
-      techStack: techStack || [],
-      features: features || [],
-      sections: sections || [],
-
-      isPublished: isPublished ?? false,
-      isFeatured: isFeatured ?? false,
-
-      githubUrl: githubUrl || "",
-      demoUrl: demoUrl || "",
-    });
+    if (error) {
+      throw error;
+    }
 
     return NextResponse.json(
       {
         message: "Project created successfully",
-        data: newProject,
+        data,
       },
       {
         status: 201,
@@ -192,8 +176,6 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
   try {
-    await connectMongoDB();
-
     const body = await req.json();
 
     const {
@@ -213,10 +195,6 @@ export async function PUT(req: Request) {
       demoUrl,
     } = body;
 
-    // ======================================================
-    // VALIDATION
-    // ======================================================
-
     if (
       !id ||
       !title ||
@@ -226,21 +204,19 @@ export async function PUT(req: Request) {
       !longDescription ||
       !imageUrl
     ) {
-      return NextResponse.json(
-        {
-          message: "Invalid input",
-        },
-        {
-          status: 400,
-        },
-      );
+      return NextResponse.json({ message: "Invalid input" }, { status: 400 });
     }
 
-    // CHECK SLUG DUPLICATE
-    const existingSlug = await Project.findOne({
-      slug,
-      _id: { $ne: id },
-    });
+    const { data: existingSlug, error: checkError } = await supabase
+      .from("projects")
+      .select("id")
+      .eq("slug", slug)
+      .neq("id", id)
+      .maybeSingle();
+
+    if (checkError) {
+      throw checkError;
+    }
 
     if (existingSlug) {
       return NextResponse.json(
@@ -253,36 +229,33 @@ export async function PUT(req: Request) {
       );
     }
 
-    // ======================================================
-    // UPDATE
-    // ======================================================
-
-    const updatedProject = await Project.findByIdAndUpdate(
-      id,
-      {
+    const { data, error } = await supabase
+      .from("projects")
+      .update({
         title,
         slug,
         category,
         description,
-        longDescription,
-        imageUrl,
-
-        techStack: techStack || [],
+        long_description: longDescription,
+        image_url: imageUrl,
+        tech_stack: techStack || [],
         features: features || [],
         sections: sections || [],
+        is_published: isPublished ?? false,
+        is_featured: isFeatured ?? false,
+        github_url: githubUrl || "",
+        demo_url: demoUrl || "",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id)
+      .select("*")
+      .single();
 
-        isPublished: isPublished ?? false,
-        isFeatured: isFeatured ?? false,
+    if (error) {
+      throw error;
+    }
 
-        githubUrl: githubUrl || "",
-        demoUrl: demoUrl || "",
-      },
-      {
-        new: true,
-      },
-    );
-
-    if (!updatedProject) {
+    if (!data) {
       return NextResponse.json(
         {
           message: "Project not found",
@@ -295,7 +268,7 @@ export async function PUT(req: Request) {
 
     return NextResponse.json({
       message: "Project updated successfully",
-      data: updatedProject,
+      data,
     });
   } catch (error) {
     console.error("PUT_PROJECT_ERROR:", error);
@@ -317,24 +290,24 @@ export async function PUT(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
-    await connectMongoDB();
-
     const { id } = await req.json();
 
     if (!id) {
-      return NextResponse.json(
-        {
-          message: "Invalid input",
-        },
-        {
-          status: 400,
-        },
-      );
+      return NextResponse.json({ message: "Invalid input" }, { status: 400 });
     }
 
-    const deletedProject = await Project.findByIdAndDelete(id);
+    const { data, error } = await supabase
+      .from("projects")
+      .delete()
+      .eq("id", id)
+      .select("id")
+      .single();
 
-    if (!deletedProject) {
+    if (error) {
+      throw error;
+    }
+
+    if (!data) {
       return NextResponse.json(
         {
           message: "Project not found",

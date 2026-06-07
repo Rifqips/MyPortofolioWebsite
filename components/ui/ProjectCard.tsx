@@ -17,7 +17,7 @@ export default function ProjectCard({ project }: Props) {
       .filter(Boolean);
   };
 
-  const techStacks = toChips(project.techStack) || [];
+  const techStacks = toChips(project.tech_stack) || [];
   const visibleTechStacks = techStacks.slice(0, MAX_VISIBLE_CHIPS);
   const hiddenCount = techStacks.length - MAX_VISIBLE_CHIPS;
 
@@ -33,7 +33,7 @@ export default function ProjectCard({ project }: Props) {
     >
       <div className="relative h-52 overflow-hidden bg-slate-900">
         <Image
-          src={project.imageUrl}
+          src={project.image_url}
           alt={project.title}
           fill
           className="object-cover transition duration-500 group-hover:scale-105"

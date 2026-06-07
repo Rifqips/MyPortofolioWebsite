@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { connectMongoDB } from "@/lib/mongodb";
-import Project from "@/models/Project";
+import { supabase } from "@/lib/supabase";
 
 interface Props {
   params: Promise<{
@@ -9,18 +8,39 @@ interface Props {
   }>;
 }
 
+function mapBodyToSupabase(body: any) {
+  return {
+    title: body.title,
+    slug: body.slug,
+    category: body.category,
+    description: body.description,
+    long_description: body.longDescription,
+    image_url: body.imageUrl,
+    tech_stack: body.techStack || [],
+    features: body.features || [],
+    sections: body.sections || [],
+    is_published: body.isPublished ?? false,
+    is_featured: body.isFeatured ?? false,
+    github_url: body.githubUrl || "",
+    demo_url: body.demoUrl || "",
+    updated_at: new Date().toISOString(),
+  };
+}
+
 export async function GET(_request: Request, { params }: Props) {
   try {
-    await connectMongoDB();
-
     const { id } = await params;
 
-    const project = await Project.findById(id);
+    const { data: project, error } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("id", id)
+      .single();
 
-    if (!project) {
+    if (error || !project) {
       return NextResponse.json(
         { message: "Project not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -30,35 +50,27 @@ export async function GET(_request: Request, { params }: Props) {
 
     return NextResponse.json(
       { message: "Failed to get project" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function PUT(request: Request, { params }: Props) {
   try {
-    await connectMongoDB();
-
     const { id } = await params;
     const body = await request.json();
 
-    const project = await Project.findByIdAndUpdate(
-      id,
-      {
-        ...body,
-        techStack: body.techStack || [],
-        features: body.features || [],
-        sections: body.sections || [],
-      },
-      {
-        new: true,
-      }
-    );
+    const { data: project, error } = await supabase
+      .from("projects")
+      .update(mapBodyToSupabase(body))
+      .eq("id", id)
+      .select("*")
+      .single();
 
-    if (!project) {
+    if (error || !project) {
       return NextResponse.json(
         { message: "Project not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -68,23 +80,26 @@ export async function PUT(request: Request, { params }: Props) {
 
     return NextResponse.json(
       { message: "Failed to update project" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function DELETE(_request: Request, { params }: Props) {
   try {
-    await connectMongoDB();
-
     const { id } = await params;
 
-    const deletedProject = await Project.findByIdAndDelete(id);
+    const { data: deletedProject, error } = await supabase
+      .from("projects")
+      .delete()
+      .eq("id", id)
+      .select("id")
+      .single();
 
-    if (!deletedProject) {
+    if (error || !deletedProject) {
       return NextResponse.json(
         { message: "Project not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -96,7 +111,7 @@ export async function DELETE(_request: Request, { params }: Props) {
 
     return NextResponse.json(
       { message: "Failed to delete project" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

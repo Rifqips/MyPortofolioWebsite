@@ -16,18 +16,20 @@ export interface ProjectSection {
 }
 
 export interface Project {
-  _id?: string;
+  id: string;
   slug: string;
   title: string;
   category: ProjectCategory;
   description: string;
-  longDescription: string;
-  techStack: string[];
-  imageUrl: string;
+  long_description: string;
+  tech_stack: string[];
+  image_url: string;
   features: string[];
   sections: ProjectSection[];
-  isPublished?: boolean;
-  isFeatured?: boolean;
-  githubUrl?: string;
-  demoUrl?: string;
+  is_published: boolean;
+  is_featured: boolean;
+  github_url?: string;
+  demo_url?: string;
+  created_at?: string;
+  updated_at?: string;
 }
