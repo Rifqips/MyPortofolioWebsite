@@ -53,12 +53,14 @@ export async function GET(req: Request) {
         totalPages: Math.ceil((count || 0) / limit),
       },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("GET_PROJECTS_ERROR:", error);
 
     return NextResponse.json(
       {
         message: "Failed to get projects",
+        error: error?.message,
+        details: error,
       },
       {
         status: 500,
