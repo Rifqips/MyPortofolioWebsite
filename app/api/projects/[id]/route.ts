@@ -8,25 +8,6 @@ interface Props {
   }>;
 }
 
-function mapBodyToSupabase(body: any) {
-  return {
-    title: body.title,
-    slug: body.slug,
-    category: body.category,
-    description: body.description,
-    long_description: body.longDescription,
-    image_url: body.imageUrl,
-    tech_stack: body.techStack || [],
-    features: body.features || [],
-    sections: body.sections || [],
-    is_published: body.isPublished ?? false,
-    is_featured: body.isFeatured ?? false,
-    github_url: body.githubUrl || "",
-    demo_url: body.demoUrl || "",
-    updated_at: new Date().toISOString(),
-  };
-}
-
 export async function GET(_request: Request, { params }: Props) {
   try {
     const { id } = await params;
@@ -60,21 +41,55 @@ export async function PUT(request: Request, { params }: Props) {
     const { id } = await params;
     const body = await request.json();
 
-    const { data: project, error } = await supabase
-      .from("projects")
-      .update(mapBodyToSupabase(body))
-      .eq("id", id)
-      .select("*")
-      .single();
+    const payload = {
+      title: body.title,
+      slug: body.slug,
+      category: body.category,
+      description: body.description,
+      long_description: body.longDescription,
+      image_url: body.imageUrl,
+      tech_stack: body.techStack || [],
+      features: body.features || [],
+      sections: body.sections || [],
+      is_published: body.isPublished ?? false,
+      is_featured: body.isFeatured ?? false,
+      github_url: body.githubUrl || "",
+      demo_url: body.demoUrl || "",
+      updated_at: new Date().toISOString(),
+    };
 
-    if (error || !project) {
+    const { data, error } = await supabase
+      .from("projects")
+      .update(payload)
+      .eq("id", id)
+      .select("*");
+
+    if (error) {
+      console.error("SUPABASE_UPDATE_ERROR:", error);
+
       return NextResponse.json(
-        { message: "Project not found" },
+        {
+          message: "Failed to update project",
+          error,
+        },
+        { status: 500 },
+      );
+    }
+
+    if (!data || data.length === 0) {
+      return NextResponse.json(
+        {
+          message: "Project not found",
+          id,
+        },
         { status: 404 },
       );
     }
 
-    return NextResponse.json(project);
+    return NextResponse.json({
+      message: "Project updated successfully",
+      data: data[0],
+    });
   } catch (error) {
     console.error("PUT_PROJECT_BY_ID_ERROR:", error);
 
