@@ -1,13 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #020617;
-  --surface: #0f172a;
-  --primary: #3b82f6;
-  --accent: #38bdf8;
+  --background: #050816;
+  --surface: #0b1220;
+  --surface-2: #111827;
+  --primary: #7c3aed;
+  --secondary: #2563eb;
+  --accent: #22d3ee;
   --text: #f8fafc;
   --muted: #94a3b8;
-  --border: #1e293b;
+  --border: rgba(255, 255, 255, 0.08);
 }
 
 html {
@@ -15,113 +17,176 @@ html {
 }
 
 body {
+  font-family: var(--font-inter), sans-serif;
   background: var(--background);
   color: var(--text);
-  font-family: var(--font-inter), sans-serif;
+  overflow-x: hidden;
 }
 
+/* ---------- Background ---------- */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(124, 58, 237, 0.22),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(34, 211, 238, 0.18),
+      transparent 35%
+    ),
+    radial-gradient(circle at center, rgba(37, 99, 235, 0.08), transparent 50%),
+    #050816;
+}
+
+/* grid */
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(circle at center, black, transparent 90%);
+}
+
+/* ---------- Layout ---------- */
+
 .container-layout {
-  @apply max-w-6xl mx-auto px-6;
+  @apply max-w-7xl mx-auto px-6 lg:px-10;
 }
 
 .section-spacing {
-  @apply py-24;
-}
-
-.background-glow {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.background-glow::before {
-  content: "";
-  position: absolute;
-  width: 500px;
-  height: 500px;
-  background: rgba(56, 189, 248, 0.12);
-  filter: blur(120px);
-  top: -100px;
-  left: -100px;
-}
-
-.background-glow::after {
-  content: "";
-  position: absolute;
-  width: 500px;
-  height: 500px;
-  background: rgba(59, 130, 246, 0.12);
-  filter: blur(120px);
-  bottom: -100px;
-  right: -100px;
-}
-
-.background-grid {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-
-  background-size: 50px 50px;
+  @apply py-36;
 }
 
 .section-anchor {
-  scroll-margin-top: 100px;
+  scroll-margin-top: 120px;
 }
 
+/* ---------- Glass ---------- */
 
-@keyframes gradientMove {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
 }
 
-.animate-gradient {
-  animation: gradientMove 5s ease infinite;
+/* ---------- Card ---------- */
+
+.card {
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: 0.35s;
+  overflow: hidden;
 }
 
-.project-swiper .swiper-pagination-bullet {
-  background: #64748b;
-  opacity: 1;
+.card:hover {
+  transform: translateY(-10px);
+  border-color: rgba(124, 58, 237, 0.5);
+  box-shadow: 0 20px 70px rgba(124, 58, 237, 0.18);
 }
 
-.project-swiper .swiper-pagination-bullet-active {
-  background: #38bdf8;
+/* ---------- Button ---------- */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 15px 28px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #7c3aed, #2563eb, #22d3ee);
+  transition: 0.35s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 60px rgba(37, 99, 235, 0.35);
+}
+
+.btn-secondary {
+  border-radius: 999px;
+  padding: 15px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: 0.3s;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ---------- Heading ---------- */
+
+.title-xl {
+  font-size: clamp(48px, 7vw, 82px);
+  line-height: 0.95;
+  font-weight: 800;
+  letter-spacing: -3px;
+}
+
+.title-lg {
+  font-size: clamp(34px, 4vw, 52px);
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.9;
+}
+
+/* ---------- Selection ---------- */
+
+::selection {
+  background: #7c3aed;
+  color: white;
+}
+
+.project-swiper {
+  overflow: visible;
 }
 
 .project-swiper .swiper-slide {
   height: auto;
+  transition: 0.45s ease;
+  opacity: 0.45;
+  transform: scale(0.92);
 }
 
-.project-swiper .swiper-wrapper {
-  align-items: stretch;
+.project-swiper .swiper-slide-active {
+  opacity: 1;
+  transform: scale(1);
 }
 
-.input-admin {
-  width: 100%;
-  border-radius: 1rem;
-  border: 1px solid rgb(30 41 59);
-  background: rgba(15, 23, 42, 0.7);
-  padding: 1rem 1.1rem;
-  color: white;
-  outline: none;
-  transition: 0.2s ease;
+.project-swiper .swiper-pagination {
+  bottom: 0 !important;
 }
 
-.input-admin::placeholder {
-  color: rgb(148 163 184);
+.project-swiper .swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.25);
+  opacity: 1;
+  transition: 0.35s;
 }
 
-.input-admin:focus {
-  border-color: rgb(14 165 233);
-  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+.project-swiper .swiper-pagination-bullet-active {
+  width: 40px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7c3aed, #2563eb, #22d3ee);
 }

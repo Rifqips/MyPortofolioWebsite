@@ -1,133 +1,162 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
+import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
-import useActiveSection from "@/hooks/useActiveSection";
-
-const navItems = [
-  { label: "About", href: "about" },
-  { label: "Skills", href: "skills" },
-  { label: "Projects", href: "projects" },
-  { label: "Contact", href: "contact" },
+const menus = [
+  {
+    name: "About",
+    href: "#about",
+  },
+  {
+    name: "Projects",
+    href: "#projects",
+  },
+  {
+    name: "Skills",
+    href: "#skills",
+  },
+  {
+    name: "Contact",
+    href: "#contact",
+  },
 ];
 
 export default function Navbar() {
-  const activeSection = useActiveSection();
-  const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [lastScroll, setLastScroll] = useState(0);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (current) => {
+    if (current > lastScroll && current > 120) {
+      setHidden(true);
+    } else {
+      setHidden(false);
+    }
+
+    setLastScroll(current);
+  });
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+  }, [mobileOpen]);
 
   return (
-    <header
-      className={`
-        fixed left-0 right-0 top-0 z-[9999]
-        border-b transition-all duration-300
-        ${
-          isScrolled || isOpen
-            ? "border-slate-800 bg-slate-950/95 shadow-lg backdrop-blur-xl"
-            : "border-transparent bg-slate-950/40 backdrop-blur-md"
-        }
-      `}
-    >
-      <div className="container-layout flex h-16 items-center justify-between">
-        <a href="#" className="text-lg font-semibold tracking-wide text-white">
-          Rifqi Padi
-        </a>
+    <>
+      <motion.header
+        initial={{ y: -120 }}
+        animate={{
+          y: hidden ? -120 : 0,
+        }}
+        transition={{
+          duration: 0.35,
+        }}
+        className="fixed inset-x-0 top-5 z-50"
+      >
+        <div className="container-layout">
+          <div className="glass flex h-16 items-center justify-between rounded-full px-6">
+            {/* LOGO */}
 
-        <nav className="hidden items-center gap-8 md:flex">
-          {navItems.map((item) => {
-            const isActive = activeSection === item.href;
+            <Link href="/" className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 via-blue-600 to-cyan-500 shadow-lg shadow-violet-600/20">
+                <Image src="/favicon.ico" alt="Logo" width={24} height={24} />
+              </div>
 
-            return (
-              <a
-                key={item.href}
-                href={`#${item.href}`}
-                className={`text-sm transition duration-300 ${
-                  isActive ? "text-sky-400" : "text-slate-300 hover:text-white"
-                }`}
-              >
-                {item.label}
-              </a>
-            );
-          })}
-        </nav>
+              <div className="hidden md:block">
+                <p className="font-semibold tracking-wide">Rifqi Padi S</p>
 
-        <button
-          type="button"
-          aria-label="Toggle navigation menu"
-          onClick={() => {
-            setIsOpen((prev) => !prev);
-          }}
-          className="
-            relative
-            z-[10000]
-            flex
-            h-10
-            w-10
-            cursor-pointer
-            items-center
-            justify-center
-            rounded-xl
-            border
-            border-slate-700
-            bg-slate-900
-            text-white
-            md:hidden
-          "
-        >
-          {isOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
-      </div>
+                <p className="text-xs text-slate-400">
+                  Freelancer Software Developer
+                </p>
+              </div>
+            </Link>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25 }}
-            className="
-              absolute left-0 right-0 top-16 z-[9999]
-              border-t border-slate-800 bg-slate-950 md:hidden
-            "
-          >
-            <nav className="container-layout flex flex-col py-6">
-              {navItems.map((item) => {
-                const isActive = activeSection === item.href;
+            {/* DESKTOP */}
 
-                return (
-                  <a
-                    key={item.href}
-                    href={`#${item.href}`}
-                    onClick={() => setIsOpen(false)}
-                    className={`py-4 text-sm transition duration-300 ${
-                      isActive
-                        ? "text-sky-400"
-                        : "text-slate-300 hover:text-white"
-                    }`}
-                  >
-                    {item.label}
-                  </a>
-                );
-              })}
+            <nav className="hidden items-center gap-8 md:flex">
+              {menus.map((menu) => (
+                <Link
+                  key={menu.name}
+                  href={menu.href}
+                  className="
+                  text-sm
+                  text-slate-400
+                  transition
+                  hover:text-white
+                  "
+                >
+                  {menu.name}
+                </Link>
+              ))}
             </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
+
+            {/* RIGHT */}
+
+            <div className="hidden items-center gap-3 md:flex">
+              <a
+                href="https://www.linkedin.com/in/rifqips/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary"
+              >
+                LinkedIn
+              </a>
+            </div>
+
+            {/* MOBILE */}
+
+            <button className="md:hidden" onClick={() => setMobileOpen(true)}>
+              <Menu size={24} />
+            </button>
+          </div>
+        </div>
+      </motion.header>
+
+      {/* MOBILE MENU */}
+
+      {mobileOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed inset-0 z-[100] bg-[#050816]"
+        >
+          <div className="flex h-20 items-center justify-between px-6">
+            <p className="font-semibold">Menu</p>
+
+            <button onClick={() => setMobileOpen(false)}>
+              <X />
+            </button>
+          </div>
+
+          <div className="mt-10 flex flex-col items-center gap-8">
+            {menus.map((menu) => (
+              <Link
+                key={menu.name}
+                href={menu.href}
+                onClick={() => setMobileOpen(false)}
+                className="
+                text-2xl
+                font-semibold
+                text-slate-300
+                transition
+                hover:text-white
+                "
+              >
+                {menu.name}
+              </Link>
+            ))}
+
+            <a href="/resume.pdf" className="btn-primary mt-8">
+              Resume
+            </a>
+          </div>
+        </motion.div>
+      )}
+    </>
   );
 }

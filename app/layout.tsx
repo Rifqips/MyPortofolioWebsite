@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Rifqi Padi Siliwangi | Software Engineer",
+  title: "Rifqi Padi Siliwangi | Freelancer Software Developer",
   description:
     "Portfolio website of Rifqi Padi, an Android Developer focused on Kotlin, Jetpack Compose, and scalable mobile architecture.",
   keywords: [
@@ -31,9 +31,8 @@ export const metadata: Metadata = {
 
   openGraph: {
     title: "Rifqi Padi | Android Developer",
-    description:
-      "Portfolio website showcasing Android and fullstack projects.",
-      
+    description: "Portfolio website showcasing Android and fullstack projects.",
+
     url: "https://your-domain.vercel.app",
 
     siteName: "Rifqi Portfolio",
@@ -46,8 +45,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Rifqi Padi | Android Developer",
-    description:
-      "Portfolio website showcasing Android and fullstack projects.",
+    description: "Portfolio website showcasing Android and fullstack projects.",
   },
 };
 
@@ -62,9 +60,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.variable}>
-        {children}
-      </body>
+      <body className={inter.variable}>{children}</body>
     </html>
   );
 }
