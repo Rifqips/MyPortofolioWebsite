@@ -151,8 +151,13 @@ export default function Navbar() {
               </Link>
             ))}
 
-            <a href="/resume.pdf" className="btn-primary mt-8">
-              Resume
+            <a
+              href="https://www.linkedin.com/in/rifqips/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary"
+            >
+              LinkedIn
             </a>
           </div>
         </motion.div>
