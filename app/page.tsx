@@ -1,10 +1,16 @@
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
-import AboutSection from "@/components/sections/AboutSection";
-import ContactSection from "@/components/sections/ContactSection";
+
 import HeroSection from "@/components/sections/HeroSection";
+import AboutSection from "@/components/sections/AboutSection";
+// import ServicesSection from "@/components/sections/ServicesSection";
+import PricingSection from "@/components/sections/PricingSection";
+import ProcessSection from "@/components/sections/ProcessSection";
 import ProjectsSection from "@/components/sections/ProjectsSection";
-import SkillsSection from "@/components/sections/SkillsSection";
+import WhyChooseSection from "@/components/sections/WhyChooseSection";
+import FaqSection from "@/components/sections/FaqSection";
+import ContactSection from "@/components/sections/ContactSection";
+import ServicesSection from "@/components/sections/ServicesSection";
 
 export default function Home() {
   return (
@@ -15,8 +21,12 @@ export default function Home() {
 
       <HeroSection />
       <AboutSection />
-      <SkillsSection />
+      <ServicesSection/>
+      <PricingSection />
+      <ProcessSection />
       <ProjectsSection />
+      <WhyChooseSection />
+      <FaqSection />
       <ContactSection />
 
       <Footer />

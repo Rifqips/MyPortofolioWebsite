@@ -233,51 +233,62 @@ export default function AboutSection() {
                   </div>
                 </div>
               </div>
-
-              <div className="grid grid-cols-3 gap-5">
+              <div className="grid grid-cols-3 gap-3 md:gap-5">
                 <div
                   className="
-                  rounded-[24px]
-                  border
-                  border-white/10
-                  bg-white/5
-                  p-6
-                  text-center
-                  "
+      rounded-[20px]
+      border
+      border-white/10
+      bg-white/5
+      p-4
+      text-center
+      md:rounded-[24px]
+      md:p-6
+    "
                 >
-                  <h3 className="text-4xl font-bold">10+</h3>
+                  <h3 className="text-2xl font-bold md:text-4xl">10+</h3>
 
-                  <p className="mt-2 text-sm text-slate-400">Projects</p>
+                  <p className="mt-1 text-xs text-slate-400 md:mt-2 md:text-sm">
+                    Projects
+                  </p>
                 </div>
 
                 <div
                   className="
-                  rounded-[24px]
-                  border
-                  border-white/10
-                  bg-white/5
-                  p-6
-                  text-center
-                  "
+      rounded-[20px]
+      border
+      border-white/10
+      bg-white/5
+      p-4
+      text-center
+      md:rounded-[24px]
+      md:p-6
+    "
                 >
-                  <h3 className="text-4xl font-bold">3+</h3>
+                  <h3 className="text-2xl font-bold md:text-4xl">3+</h3>
 
-                  <p className="mt-2 text-sm text-slate-400">Years</p>
+                  <p className="mt-1 text-xs text-slate-400 md:mt-2 md:text-sm">
+                    Years
+                  </p>
                 </div>
 
                 <div
                   className="
-                  rounded-[24px]
-                  border
-                  border-white/10
-                  bg-white/5
-                  p-6
-                  text-center
-                  "
+      rounded-[20px]
+      border
+      border-white/10
+      bg-white/5
+      p-4
+      text-center
+      md:rounded-[24px]
+      md:p-6
+    "
                 >
-                  <h3 className="text-4xl font-bold">15+</h3>
+                  <h3 className="text-2xl font-bold md:text-4xl">15+</h3>
 
-                  <p className="mt-2 text-sm text-slate-400">Technologies</p>
+                  <p className="mt-1 break-words text-xs leading-5 text-slate-400 md:mt-2 md:text-sm">
+                    Technologies
+                  </p>
                 </div>
               </div>
             </div>

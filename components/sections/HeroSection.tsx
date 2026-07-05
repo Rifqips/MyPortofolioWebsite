@@ -62,21 +62,21 @@ export default function HeroSection() {
 
           {/* Stats */}
 
-          <div className="mt-16 grid grid-cols-3 gap-5">
-            <div className="card p-6">
-              <h2 className="text-4xl font-bold text-white">10+</h2>
+          <div className="mt-16 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-5">
+            <div className="card p-5 md:p-6">
+              <h2 className="text-3xl font-bold text-white md:text-4xl">10+</h2>
 
               <p className="mt-2 text-sm text-slate-400">Projects</p>
             </div>
 
-            <div className="card p-6">
-              <h2 className="text-4xl font-bold text-white">3+</h2>
+            <div className="card p-5 md:p-6">
+              <h2 className="text-3xl font-bold text-white md:text-4xl">3+</h2>
 
               <p className="mt-2 text-sm text-slate-400">Years</p>
             </div>
 
-            <div className="card p-6">
-              <h2 className="text-4xl font-bold text-white">15+</h2>
+            <div className="card p-5 md:p-6">
+              <h2 className="text-3xl font-bold text-white md:text-4xl">15+</h2>
 
               <p className="mt-2 text-sm text-slate-400">Technologies</p>
             </div>
