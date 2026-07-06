@@ -99,7 +99,7 @@ export default function FaqSection() {
           </p>
 
           <a
-            href="https://wa.me/6281234567890"
+            href="https://wa.me/6285155055472"
             target="_blank"
             className="btn-primary"
           >
